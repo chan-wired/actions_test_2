@@ -25,15 +25,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-  printJob:
-    name: Print event
-    runs-on: ubuntu-latest
-    steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: |
-        echo "$GITHUB_CONTEXT"
+  # printJob:
+  #   name: Print event
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Dump GitHub context
+  #     env:
+  #       GITHUB_CONTEXT: ${{ toJson(github) }}
+  #     run: |
+  #       echo "$GITHUB_CONTEXT"
 
   slask:
     name: notify to slack for build result
@@ -46,7 +46,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: Last commit message ${{ github.event.head_commit.message }} is released.
+          text: `Last commit message \n [${{ github.event.head_commit.message }}] \n is released.`
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
