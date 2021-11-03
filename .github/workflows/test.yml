@@ -1,42 +1,114 @@
-name: test
+# This is a basic workflow to help you get started with Actions
 
+name: CI
+
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main, stage, devel ]
   pull_request:
     branches: [ main, stage, devel ]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  notify-slack:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+  slask:
     name: notify to slack for build result
     if: always()
     runs-on: ubuntu-latest
-    needs: deploy-aws-eb
     steps:
-      - uses: technote-space/workflow-conclusion-action@v2
-      - id: vars
-        shell: bash
-        run: |
-          author="${GITHUB_ACTOR//-wired/}"
-          echo "::set-output name=author::$author"
-      - name: Notify Workflow Result
-        uses: 8398a7/action-slack@v3
-        with:
-          mention: ${{ steps.vars.outputs.author }} # slack ID 영어닉네임 / github ID 영어닉네임-wired 일때 정상동작
-          if_mention: failure
-          status: ${{ env.WORKFLOW_CONCLUSION }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: (success() && contains('refs/heads/devel refs/heads/stage refs/heads/main', github.ref)) || failure() # devel, stage, main은 항상 / feature는 실패시에만 noti
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
-        if: always() && contains('refs/heads/devel', github.ref)
+        if: always()
         with:
-          job_name: CD Pipeline to AWS Elastic Beanstalk # match the name above
-          status: ${{ env.WORKFLOW_CONCLUSION }}
+          status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
           text: ${{ github.event.pull_request.title }} is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+  # slack:
+  #   name: action-slack
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: 8398a7/action-slack@v3.9.3
+  #       if: always() && contains('refs/heads/devel', github.ref)
+  #       with:
+  #         job_name: CD Pipeline to AWS Elastic Beanstalk # match the name above
+  #         status: ${{ env.WORKFLOW_CONCLUSION }}
+  #         fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
+  #         text: ${{ github.event.pull_request.title }} is released.
+  #       env:
+  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+
+# name: test
+
+# on:
+#   push:
+#     branches: [ main, stage, devel ]
+#   pull_request:
+#     branches: [ main, stage, devel ]
+
+
+# jobs:
+#   build:
+#     name: CI Pipeline
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       matrix:
+#         node-version: [14.x]
+#         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+#     steps:
+#       - uses: actions/checkout@v2
+
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: ${{ matrix.node-version }}
+#           cache: 'npm'
+
+#   notify-slack:
+#     name: notify to slack for build result
+#     if: always()
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: technote-space/workflow-conclusion-action@v2
+#       - id: vars
+#         shell: bash
+#         run: |
+#           author="${GITHUB_ACTOR//-wired/}"
+#           echo "::set-output name=author::$author"
+#       - name: Notify Workflow Result
+#         uses: 8398a7/action-slack@v3
+#         with:
+#           mention: ${{ steps.vars.outputs.author }} # slack ID 영어닉네임 / github ID 영어닉네임-wired 일때 정상동작
+#           if_mention: failure
+#           status: ${{ env.WORKFLOW_CONCLUSION }}
+#           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#         env:
+#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+#         if: (success() && contains('refs/heads/devel refs/heads/stage refs/heads/main', github.ref)) || failure() # devel, stage, main은 항상 / feature는 실패시에만 noti
+#       - name: Release Slack Alert (Dev)
+#         uses: 8398a7/action-slack@v3
+#         if: always() && contains('refs/heads/devel', github.ref)
+#         with:
+#           job_name: CD Pipeline to AWS Elastic Beanstalk # match the name above
+#           status: ${{ env.WORKFLOW_CONCLUSION }}
+#           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
+#           text: ${{ github.event.pull_request.title }} is released.
+#         env:
+#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
