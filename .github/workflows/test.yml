@@ -23,6 +23,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+  printJob:
+    name: Print event
+    runs-on: ubuntu-latest
+    steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
+
   slask:
     name: notify to slack for build result
     if: always()
