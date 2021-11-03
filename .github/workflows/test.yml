@@ -46,7 +46,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: `Last commit message \n [${{ github.event.head_commit.message }}] \n is released.`
+          text: Last commit message \n [${{ github.event.head_commit.message }}] \n is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
