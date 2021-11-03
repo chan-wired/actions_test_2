@@ -28,9 +28,6 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Set env
-        run: |
-          echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
