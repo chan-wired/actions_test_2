@@ -7,8 +7,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main, stage, devel ]
-  pull_request:
-    branches: [ main, stage, devel ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -38,8 +36,8 @@ jobs:
         if: always()
         with:
           status: ${{ job.status }}
-          fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
-          text: pull_request=${{ github.event.pull_request.title }} || pull_request_target=${{ github.event.pull_request.title }} || env.PR_TITLE=${{ env.PR_TITLE }} || github.event.title=${{github.event.title}} || github.event.push.head_commit.id=${{ github.event.push.head_commit.id }}
+          fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
+          text: github.event.push.head_commit.id=${{ github.event.push.head_commit.id }} || ${{ github.event.push.ref}} || ${{ github.event_name}} || ${{ github.head_ref }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
