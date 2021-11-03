@@ -30,13 +30,16 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - name: Set env
+        run: |
+          echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
-          text: pull_request=${{ github.event.pull_request.title }} \n pull_request_target=${{ github.event.pull_request.title }}
+          text: pull_request=${{ github.event.pull_request.title }} || pull_request_target=${{ github.event.pull_request.title }} || env.PR_TITLE=${{ env.PR_TITLE }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
