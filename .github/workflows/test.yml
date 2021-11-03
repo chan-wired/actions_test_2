@@ -36,15 +36,9 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
-          text: ${{ github.event.pull_request.title }} is released.
+          text: ${{ github }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
-  test:
-    name: test
-    if: always()
-    runs-on: ubuntu-latest
-    run: |
-    echo ${{ github.event.pull_request }}
   # slack:
   #   name: action-slack
   #   runs-on: ubuntu-latest
