@@ -30,7 +30,6 @@ jobs:
     name: notify to slack for build result
     if: always()
     runs-on: ubuntu-latest
-    needs: deploy-aws-eb
     steps:
       - uses: technote-space/workflow-conclusion-action@v2
       - id: vars
