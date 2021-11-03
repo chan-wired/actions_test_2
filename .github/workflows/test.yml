@@ -37,7 +37,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: github.event.push.head_commit.id=${{ github.event.push.head_commit.id }} || ${{ github.event.push.ref}} || ${{ github.event_name}} || ${{ github.head_ref }}
+          text: ${{ github.event.push.head_commit.id }} || ${{ github.event.push.ref}} || ${{ github.event_name}} || ${{ github.head_ref }} || ${{github.action}} || ${{github.repository}}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
