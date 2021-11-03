@@ -36,7 +36,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
-          text: ${{ github }}
+          text: ${{ github.event.pull_request }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
