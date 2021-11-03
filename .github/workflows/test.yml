@@ -39,7 +39,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
-          text: pull_request=${{ github.event.pull_request.title }} || pull_request_target=${{ github.event.pull_request.title }} || env.PR_TITLE=${{ env.PR_TITLE }} || github.event.title=${{github.event.title}}
+          text: pull_request=${{ github.event.pull_request.title }} || pull_request_target=${{ github.event.pull_request.title }} || env.PR_TITLE=${{ env.PR_TITLE }} || github.event.title=${{github.event.title}} || github.event.check_suite.pull_requests.url=${{ github.event.check_suite.pull_requests.url }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
