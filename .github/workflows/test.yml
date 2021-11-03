@@ -39,16 +39,12 @@ jobs:
       - name: Notify Workflow Result
         uses: 8398a7/action-slack@v3
         with:
-          mention: ${{ steps.vars.outputs.author }} # slack ID 영어닉네임 / github ID 영어닉네임-wired 일때 정상동작
-          if_mention: failure
           status: ${{ env.WORKFLOW_CONCLUSION }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: (success() && contains('refs/heads/devel refs/heads/stage refs/heads/main', github.ref)) || failure() # devel, stage, main은 항상 / feature는 실패시에만 noti
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
-        if: always() && contains('refs/heads/devel', github.ref)
         with:
           job_name: CD Pipeline to AWS Elastic Beanstalk # match the name above
           status: ${{ env.WORKFLOW_CONCLUSION }}
