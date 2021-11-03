@@ -30,27 +30,13 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: technote-space/workflow-conclusion-action@v2
-      - id: vars
-        shell: bash
-        run: |
-          author="${GITHUB_ACTOR//-wired/}"
-          echo "::set-output name=author::$author"
-      - name: Notify Workflow Result
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ env.WORKFLOW_CONCLUSION }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: always() # devel, stage, main은 항상 / feature는 실패시에만 noti
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
         with:
-          status: ${{ env.WORKFLOW_CONCLUSION }}
+          status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
-          text: ${{ github.event.pull_request.pull_request.title }} is released.
+          text: ${{ github.event.pull_request.title }} is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
