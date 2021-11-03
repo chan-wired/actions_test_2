@@ -48,7 +48,6 @@ jobs:
         uses: 8398a7/action-slack@v3
         if: always()
         with:
-          job_name: CD Pipeline to AWS Elastic Beanstalk # match the name above
           status: ${{ env.WORKFLOW_CONCLUSION }}
           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
           text: ${{ github.event.pull_request.pull_request.title }} is released.
