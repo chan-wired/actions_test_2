@@ -39,6 +39,12 @@ jobs:
           text: ${{ github.event.pull_request.title }} is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+  test:
+    name: test
+    if: always()
+    runs-on: ubuntu-latest
+    run: |
+    echo ${{ github.event.pull_request }}
   # slack:
   #   name: action-slack
   #   runs-on: ubuntu-latest
