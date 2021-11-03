@@ -46,7 +46,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: ${{ github.event.push.head_commit.id }} || ${{ github.push.ref}} || ${{ github.event_name}} || ${{ github.event.push.before}} || ${{ github.event.push.after}} || ${{ github.event.push.created}} || ${{ github.event.push.deleted}} || ${{ github.event.push.forced}} || ${{ github.event.push.compare}}
+          text: ${{ github.event.commits.forEach(commit => commit.message) }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
