@@ -76,7 +76,7 @@ jobs:
               pull_number: prNumber,
             })
 
-            return pullRequest.data.title
+            return {title: pullRequest.data.title, prNumber}
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
       - name: Release Slack Alert (Dev)
@@ -85,7 +85,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: PR title [${{ steps.get-pr-title.outputs.result }}] is released.
+          text: pull request \#${{ steps.get-pr-title.outputs.result.title }} [${{ steps.get-pr-title.outputs.result.title }}] is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
 
