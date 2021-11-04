@@ -52,7 +52,7 @@ jobs:
         id: parse-prNumber
         with:
           script: |
-            const commitMessage = ${{ github.event.head_commit.message }}
+            const commitMessage = "123"
             return commitMessage
       - name: Get result
         run: echo "${{steps.parse-prNumber.outputs.result}}"
