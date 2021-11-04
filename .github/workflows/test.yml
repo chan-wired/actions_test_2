@@ -17,12 +17,8 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
   printJob:
@@ -35,20 +31,27 @@ jobs:
       run: |
         echo "$GITHUB_CONTEXT"
 
+  script-Test:
+    runs-on: ubuntu-latest
+      steps:
+      - name: parse PR number
+        id: parse-prNumber
+        uses: actions/github-script@v5.0.0
+        with:
+          script: |
+            const commitMessage = ${{ github.event.head_commit.message }};
+            const regex = /[0-9]+/;
+            const prNumber = commitMessage.match(regex)[0];
+            return prNumber;
+          result-encoding: string
+      - name: Get result
+        run: echo "${{steps.parse-prNumber.outputs.result}}"
+
   slask:
     name: notify to slack for build result
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Parse PR number
-        id: prNumber
-        shell: bash
-        run: |
-          echo ::set-output name=prNumber::$(echo `expr "Merge pull request #272384723948f from chan-wired/f-24" : '\([a-zA-Z]*\)'`)
-      - name: Check prNumber
-        shell: bash
-        run: |
-          echo prNumber: ${{ steps.prNumber.outputs.prNumber }}
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
