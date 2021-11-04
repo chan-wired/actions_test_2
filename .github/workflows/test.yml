@@ -48,7 +48,7 @@ jobs:
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
           text: Last commit message \n [${{ github.event.head_commit.message }}] \n is released.
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }} 
   # slack:
   #   name: action-slack
   #   runs-on: ubuntu-latest
