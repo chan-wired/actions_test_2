@@ -44,7 +44,7 @@ jobs:
         id: prNumber
         shell: bash
         run: |
-          echo ::set-output name=prNumber::$(echo ${{ github.event.head_commit.message }} | sed 's!prNumber: ' | sed '[0-9]+')
+          echo ::set-output name=prNumber::$(echo `expr "Merge pull request #272384723948f from chan-wired/f-24" : '\([0-9]*\)'`)
       - name: Check prNumber
         shell: bash
         run: |
