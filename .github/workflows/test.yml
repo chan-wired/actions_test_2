@@ -40,6 +40,15 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - name: Parse PR number
+        id: prNumber
+        shell: bash
+        run: |
+          echo ::set-output name=prNumber::$(echo ${{ github.event.head_commit.message }} | sed 's!prNumber: ' | sed '[0-9]+')
+      - name: Check prNumber
+        shell: bash
+        run: |
+        echo "prNumber: ${{ steps.prNumber.outputs.prNumber }}"
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
@@ -48,7 +57,7 @@ jobs:
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
           text: Last commit message \n [${{ github.event.head_commit.message }}] \n is released.
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }} 
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
   # slack:
   #   name: action-slack
   #   runs-on: ubuntu-latest
