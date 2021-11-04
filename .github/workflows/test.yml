@@ -44,18 +44,30 @@ jobs:
         with:
           github-token: ${{ secrets.TOKEN_GITHUB }}
           script: |
-            const regex = /[0-9]+/
             const commitMessage = process.env.PR_MESSAGE
-            console.log(typeof commitMessage)
+            const regex = /[0-9]+/
             const prNumber = commitMessage.match(regex)[0]
 
             return prNumber
-          result-encoding: string
-          debug: true
         env:
           PR_MESSAGE: ${{ github.event.head_commit.message }}
       - name: Get result
-        run: echo "${{steps.parse-prNumber.outputs.result}}"
+        uses: actions/github-script@v5.0.0
+        id: get-pr
+        with:
+          github-token: ${{ secrets.TOKEN_GITHUB }}
+          script: |
+            const prNumber = Number(${{steps.parse-prNumber.outputs.result}})
+
+            const pullRequest = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ,
+            })
+
+            return toJson(pullRequest)
+      - name: Get result
+        run: echo "${{steps.get-pr.outputs.result}}"
 
   # slask:
   #   name: notify to slack for build result
