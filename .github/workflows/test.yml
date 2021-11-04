@@ -61,27 +61,15 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: parse PR number
+      - name: Get PR title (Dev release)
         uses: actions/github-script@v5.0.0
-        id: parse-prNumber
+        id: get-pr-title
         with:
           github-token: ${{ secrets.TOKEN_GITHUB }}
           script: |
-            const commitMessage = process.env.PR_MESSAGE
+            const commitMessage = process.env.COMMIT_MESSAGE
             const regex = /[0-9]+/
-            const prNumber = commitMessage.match(regex)[0]
-
-            return prNumber
-        env:
-          PR_MESSAGE: ${{ github.event.head_commit.message }}
-      - name: Get result
-        uses: actions/github-script@v5.0.0
-        id: get-pr
-        with:
-          github-token: ${{ secrets.TOKEN_GITHUB }}
-          script: |
-            const prNumber = Number(${{steps.parse-prNumber.outputs.result}})
-
+            const prNumber = Number(commitMessage.match(regex)[0])
             const pullRequest = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -89,13 +77,15 @@ jobs:
             })
 
             return pullRequest.data.title
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: Last commit message \n [${{ steps.get-pr.outputs.result }}] \n is released.
+          text: PR title [${{ steps.get-pr-title.outputs.result }}] is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
 
