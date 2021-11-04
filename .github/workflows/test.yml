@@ -51,6 +51,7 @@ jobs:
 
             return prNumber
           result-encoding: string
+          debug: true
       - name: Get result
         run: echo "${{steps.parse-prNumber.outputs.result}}"
 
