@@ -62,7 +62,7 @@ jobs:
             const pullRequest = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: ,
+              pull_number: prNumber,
             })
 
             return toJson(pullRequest)
