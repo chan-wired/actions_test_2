@@ -30,14 +30,14 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
-  script:
-  - uses: actions/github-script@v5
-    id: set-result
-    with:
-      script: return "Hello!"
-      result-encoding: string
-  - name: Get result
-    run: echo "${{steps.set-result.outputs.result}}"
+  script2:
+    - uses: actions/github-script@v5
+      id: set-result
+      with:
+        script: return "Hello!"
+        result-encoding: string
+    - name: Get result
+      run: echo "${{steps.set-result.outputs.result}}"
 
   # script-Test:
   #   runs-on: ubuntu-latest
