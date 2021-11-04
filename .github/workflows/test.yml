@@ -43,8 +43,8 @@ jobs:
         id: parse-prNumber
         with:
           script: |
-            const commitMessage = "${{github.event.head_commit.message}}"
-
+            let commitMessage = ${{github.event.head_commit.message}}
+            commitMessage = `"${commitMessage}"`
             const regex = /[0-9]+/
 
             const prNumber = commitMessage.match(regex)[0]
