@@ -48,7 +48,7 @@ jobs:
       - name: Check prNumber
         shell: bash
         run: |
-        echo "prNumber: ${{ steps.prNumber.outputs.prNumber }}"
+          echo prNumber: ${{ steps.prNumber.outputs.prNumber }}
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
