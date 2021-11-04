@@ -45,6 +45,7 @@ jobs:
           script: |
             const regex = /[0-9]+/
             const commitMessage = "${{github.event.head_commit.message}}"
+            console.log(typeof commitMessage)
             const prNumber = commitMessage.match(regex)[0]
 
             return prNumber
