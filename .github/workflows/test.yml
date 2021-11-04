@@ -39,10 +39,10 @@ jobs:
         uses: actions/github-script@v5.0.0
         with:
           script: |
-            const commitMessage = ${{ github.event.head_commit.message }};
-            const regex = /[0-9]+/;
-            const prNumber = commitMessage.match(regex)[0];
-            return prNumber;
+            const commitMessage = ${{ github.event.head_commit.message }}
+            const regex = /[0-9]+/
+            const prNumber = commitMessage.match(regex)[0]
+            return prNumber
           result-encoding: string
       - name: Get result
         run: echo "${{steps.parse-prNumber.outputs.result}}"
