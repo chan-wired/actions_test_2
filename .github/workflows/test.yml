@@ -97,7 +97,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: PRㅤ#${{ steps.parse-pr-number.outputs.result }} [${{ steps.get-pr-title.outputs.result }}] is released.
+          text: Pull Requestㅤ#${{ steps.parse-pr-number.outputs.result }} [ ${{ steps.get-pr-title.outputs.result }} ] is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
 
