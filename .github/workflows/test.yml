@@ -65,6 +65,7 @@ jobs:
         uses: actions/github-script@v5.0.0
         id: parse-pr-number
         with:
+          result-encoding: string
           script: |
             const commitMessage = process.env.COMMIT_MESSAGE
             const regex = /[0-9]+/
@@ -78,6 +79,7 @@ jobs:
         id: get-pr-title
         with:
           github-token: ${{ secrets.TOKEN_GITHUB }}
+          result-encoding: string
           script: |
             const prNumber = Number(${{ steps.parse-pr-number.outputs.result }})
             const pullRequest = await github.rest.pulls.get({
@@ -93,7 +95,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: pull request \#${{ steps.parse-pr-number.outputs.result }} [${{ steps.get-pr-title.outputs.result }}] is released.
+          text: pull request `#${{ steps.parse-pr-number.outputs.result }} [${{ steps.get-pr-title.outputs.result }}] is released.
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
 
