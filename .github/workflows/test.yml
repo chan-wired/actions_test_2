@@ -65,7 +65,7 @@ jobs:
               pull_number: prNumber,
             })
 
-            return JSON.stringify(pullRequest)
+            return pullRequest.data.title
       - name: Get result
         run: echo "${{steps.get-pr.outputs.result}}"
 
