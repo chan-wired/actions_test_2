@@ -53,9 +53,7 @@ jobs:
         with:
           script: |
             const commitMessage = ${{ github.event.head_commit.message }}
-            const regex = /[0-9]+/
-            const prNumber = commitMessage.match(regex)[0]
-            return prNumber
+            return commitMessage
       - name: Get result
         run: echo "${{steps.parse-prNumber.outputs.result}}"
 
