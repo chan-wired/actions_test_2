@@ -43,7 +43,7 @@ jobs:
         id: parse-prNumber
         with:
           script: |
-            const commitMessage = ${{ github.event.head_commit.message }}
+            const commitMessage = "Merge pull request #27 from chan-wired/f-24\n\nf-24"
             const regex = /[0-9]+/
             const prNumber = commitMessage.match(regex)[0]
             return prNumber
