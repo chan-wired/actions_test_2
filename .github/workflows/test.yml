@@ -45,13 +45,15 @@ jobs:
           github-token: ${{ secrets.TOKEN_GITHUB }}
           script: |
             const regex = /[0-9]+/
-            const commitMessage = "${{github.event.head_commit.message}}"
+            const commitMessage = process.env.PR_MESSAGE
             console.log(typeof commitMessage)
             const prNumber = commitMessage.match(regex)[0]
 
             return prNumber
           result-encoding: string
           debug: true
+        env:
+          PR_MESSAGE: ${{ github.event.head_commit.message }}
       - name: Get result
         run: echo "${{steps.parse-prNumber.outputs.result}}"
 
