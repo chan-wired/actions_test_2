@@ -91,6 +91,21 @@ jobs:
             })
 
             return pullRequest.data.title
+      - name: Release Slack Alert (Stage, Prod)
+        uses: 8398a7/action-slack@v3
+        if: always() && contains('refs/heads/main', github.ref)
+        with:
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ env.WORKFLOW_CONCLUSION }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `:party-parrot: Backend ${process.env.AS_REF === 'refs/heads/dev' ? 'Production' : 'Stage'} Server Deploy ${{ env.WORKFLOW_CONCLUSION }} :party-parrot: \n by chan-wired`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
