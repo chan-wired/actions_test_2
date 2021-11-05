@@ -80,7 +80,7 @@ jobs:
         if: always() && contains('refs/heads/main', github.ref)
         id: get-pr-title
         with:
-          github-token: ${{ secrets.TOKEN_GITHUB }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
             const prNumber = Number(${{ steps.parse-pr-number.outputs.result }})
