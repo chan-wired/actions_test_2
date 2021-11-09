@@ -84,9 +84,9 @@ jobs:
           result-encoding: string
           script: |
             const prMethod = "${{ steps.check-merge-method.outputs.result }}"
+            const commitMessage = process.env.COMMIT_MESSAGE
 
             if (prMethod === "commit") {
-              const commitMessage = process.env.COMMIT_MESSAGE
               const regexToParseNumber = /[0-9]+/
               const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
               const pullRequest = await github.rest.pulls.get({
