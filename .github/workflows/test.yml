@@ -22,156 +22,124 @@ jobs:
         run: |
           echo "$GITHUB_CONTEXT"
 
-  script-Test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: parse PR number
-        uses: actions/github-script@v5.0.0
-        id: parse-prNumber
-        with:
-          github-token: ${{ secrets.TOKEN_GITHUB }}
-          script: |
-            const commitMessage = process.env.PR_MESSAGE
-            const regex = /[0-9]+/
-            const prNumber = commitMessage.match(regex)[0]
+  # script-Test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: parse PR number
+  #       uses: actions/github-script@v5.0.0
+  #       id: parse-prNumber
+  #       with:
+  #         github-token: ${{ secrets.TOKEN_GITHUB }}
+  #         script: |
+  #           const commitMessage = process.env.PR_MESSAGE
+  #           const regex = /[0-9]+/
+  #           const prNumber = commitMessage.match(regex)[0]
 
-            return prNumber
-        env:
-          PR_MESSAGE: ${{ github.event.head_commit.message }}
-      - name: Get result
-        uses: actions/github-script@v5.0.0
-        id: get-pr
-        with:
-          github-token: ${{ secrets.TOKEN_GITHUB }}
-          script: |
-            const prNumber = Number(${{steps.parse-prNumber.outputs.result}})
+  #           return prNumber
+  #       env:
+  #         PR_MESSAGE: ${{ github.event.head_commit.message }}
+  #     - name: Get result
+  #       uses: actions/github-script@v5.0.0
+  #       id: get-pr
+  #       with:
+  #         github-token: ${{ secrets.TOKEN_GITHUB }}
+  #         script: |
+  #           const prNumber = Number(${{steps.parse-prNumber.outputs.result}})
 
-            const pullRequest = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            })
+  #           const pullRequest = await github.rest.pulls.get({
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             pull_number: prNumber,
+  #           })
 
-            return pullRequest.data.title
-      - name: Get result
-        run: echo "${{steps.get-pr.outputs.result}}"
+  #           return pullRequest.data.title
+  #     - name: Get result
+  #       run: echo "${{steps.get-pr.outputs.result}}"
 
   slask:
     name: notify to slack for build result
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Parse PR number
+      - name: Check PR method
         uses: actions/github-script@v5.0.0
         if: always() && contains('refs/heads/main', github.ref)
-        id: parse-pr-number
+        id: check-merge-method
         with:
           result-encoding: string
           script: |
             const commitMessage = process.env.COMMIT_MESSAGE
-            const regex = /[0-9]+/
-            const prNumber = commitMessage.match(regex)[0]
+            const regexToCheckIsMergedByCommit = /Merge pull request/
+            const isMergedByCommit = !!commitMessage.match(regexToCheckIsMergedByCommit)
 
-            return prNumber
+            return isMergedByCommit ? "commit" : "rebase"
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-      - name: Get PR title (Dev release)
+      - name: Set alert message
         uses: actions/github-script@v5.0.0
         if: always() && contains('refs/heads/main', github.ref)
-        id: get-pr-title
+        id: set-alert-message
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const prNumber = Number(${{ steps.parse-pr-number.outputs.result }})
-            const pullRequest = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            })
+            const prMethod = ${{ steps.check-merge-method.outputs.result }}
 
-            return pullRequest.data.title
-      - name: Release Slack Alert (Stage, Prod)
-        uses: 8398a7/action-slack@v3
-        if: always() && contains('refs/heads/main', github.ref)
-        with:
-          status: custom
-          fields: workflow,job,commit,repo,ref,author,took
-          custom_payload: |
-            {
-              attachments: [{
-                color: '${{ env.WORKFLOW_CONCLUSION }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `:party-parrot: Backend ${process.env.AS_REF === 'refs/heads/dev' ? 'Production' : 'Stage'} Server Deploy ${{ env.WORKFLOW_CONCLUSION }} :party-parrot: \n by chan-wired`,
-              }]
+            if (prMethod === "commit") {
+              const commitMessage = process.env.COMMIT_MESSAGE
+              const regexToParseNumber = /[0-9]+/
+              const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
+              const pullRequest = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              })
+
+              return `Pull Requestㅤ#${prNumber} [ ${pullRequest.data.title} ] is released.`
+            } else {
+              return commitMessage
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+      # - name: Parse PR number
+      #   uses: actions/github-script@v5.0.0
+      #   if: always() && contains('refs/heads/main', github.ref)
+      #   id: parse-pr-number
+      #   with:
+      #     result-encoding: string
+      #     script: |
+      #       const commitMessage = process.env.COMMIT_MESSAGE
+      #       const regexToCheckIsMergedByCommit = /Merge pull request/
+      #       const regexToParseNumber = /[0-9]+/
+      #       const isMergedByCommit = !!commitMessage.match(regexToCheckIsMergedByCommit)
+      #       const prNumber = isMergedByCommit && commitMessage.match(regexToParseNumber)[0]
+
+      #       return isMergedByCommit ? prNumber : 0
+      #   env:
+      #     COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+      # - name: Get PR title (Dev release)
+      #   uses: actions/github-script@v5.0.0
+      #   if: always() && contains('refs/heads/main', github.ref)
+      #   id: get-pr-title
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     result-encoding: string
+      #     script: |
+      #       const isMergedByCommit = ${{ steps.parse-pr-number.outputs.result }} !== 0
+      #       const prNumber = Number(${{ steps.parse-pr-number.outputs.result }})
+      #       const pullRequest = await github.rest.pulls.get({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         pull_number: prNumber,
+      #       })
+
+      #       return pullRequest.data.title
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: Pull Requestㅤ#${{ steps.parse-pr-number.outputs.result }} [ ${{ steps.get-pr-title.outputs.result }} ] is released.
+          text: ${{ steps.set-alert-message.outputs.result }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
-
-# name: test
-
-# on:
-#   push:
-#     branches: [ main, stage, devel ]
-#   pull_request:
-#     branches: [ main, stage, devel ]
-
-
-# jobs:
-#   build:
-#     name: CI Pipeline
-#     runs-on: ubuntu-latest
-
-#     strategy:
-#       matrix:
-#         node-version: [14.x]
-#         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-#     steps:
-#       - uses: actions/checkout@v2
-
-#       - name: Use Node.js ${{ matrix.node-version }}
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: ${{ matrix.node-version }}
-#           cache: 'npm'
-
-#   notify-slack:
-#     name: notify to slack for build result
-#     if: always()
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: technote-space/workflow-conclusion-action@v2
-#       - id: vars
-#         shell: bash
-#         run: |
-#           author="${GITHUB_ACTOR//-wired/}"
-#           echo "::set-output name=author::$author"
-#       - name: Notify Workflow Result
-#         uses: 8398a7/action-slack@v3
-#         with:
-#           mention: ${{ steps.vars.outputs.author }} # slack ID 영어닉네임 / github ID 영어닉네임-wired 일때 정상동작
-#           if_mention: failure
-#           status: ${{ env.WORKFLOW_CONCLUSION }}
-#           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-#         env:
-#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-#         if: (success() && contains('refs/heads/devel refs/heads/stage refs/heads/main', github.ref)) || failure() # devel, stage, main은 항상 / feature는 실패시에만 noti
-#       - name: Release Slack Alert (Dev)
-#         uses: 8398a7/action-slack@v3
-#         if: always() && contains('refs/heads/devel', github.ref)
-#         with:
-#           job_name: CD Pipeline to AWS Elastic Beanstalk # match the name above
-#           status: ${{ env.WORKFLOW_CONCLUSION }}
-#           fields: repo,message,commit,author,action,ref,workflowg # selectable (default: repo,message)
-#           text: ${{ github.event.pull_request.title }} is released.
-#         env:
-#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
