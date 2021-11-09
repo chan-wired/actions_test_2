@@ -95,7 +95,7 @@ jobs:
                 pull_number: prNumber,
               })
 
-              return `Pull Requestㅤ#${prNumber} [ ${pullRequest.data.title} ] is released..`
+              return `Pull Requestㅤ#${prNumber} [ ${pullRequest.data.title} ] is released...`
             } else {
               return commitMessage
             }
