@@ -97,7 +97,7 @@ jobs:
 
               return `Pull Requestㅤ#${prNumber} [ ${pullRequest.data.title} ] is released...`
             } else {
-              return commitMessage
+              return `Last commit ${commitMessage} is released.`
             }
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
