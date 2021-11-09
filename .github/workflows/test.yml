@@ -22,40 +22,6 @@ jobs:
         run: |
           echo "$GITHUB_CONTEXT"
 
-  # script-Test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: parse PR number
-  #       uses: actions/github-script@v5.0.0
-  #       id: parse-prNumber
-  #       with:
-  #         github-token: ${{ secrets.TOKEN_GITHUB }}
-  #         script: |
-  #           const commitMessage = process.env.PR_MESSAGE
-  #           const regex = /[0-9]+/
-  #           const prNumber = commitMessage.match(regex)[0]
-
-  #           return prNumber
-  #       env:
-  #         PR_MESSAGE: ${{ github.event.head_commit.message }}
-  #     - name: Get result
-  #       uses: actions/github-script@v5.0.0
-  #       id: get-pr
-  #       with:
-  #         github-token: ${{ secrets.TOKEN_GITHUB }}
-  #         script: |
-  #           const prNumber = Number(${{steps.parse-prNumber.outputs.result}})
-
-  #           const pullRequest = await github.rest.pulls.get({
-  #             owner: context.repo.owner,
-  #             repo: context.repo.repo,
-  #             pull_number: prNumber,
-  #           })
-
-  #           return pullRequest.data.title
-  #     - name: Get result
-  #       run: echo "${{steps.get-pr.outputs.result}}"
-
   slask:
     name: notify to slack for build result
     if: always()
@@ -101,39 +67,6 @@ jobs:
             }
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-      # - name: Parse PR number
-      #   uses: actions/github-script@v5.0.0
-      #   if: always() && contains('refs/heads/main', github.ref)
-      #   id: parse-pr-number
-      #   with:
-      #     result-encoding: string
-      #     script: |
-      #       const commitMessage = process.env.COMMIT_MESSAGE
-      #       const regexToCheckIsMergedByCommit = /Merge pull request/
-      #       const regexToParseNumber = /[0-9]+/
-      #       const isMergedByCommit = !!commitMessage.match(regexToCheckIsMergedByCommit)
-      #       const prNumber = isMergedByCommit && commitMessage.match(regexToParseNumber)[0]
-
-      #       return isMergedByCommit ? prNumber : 0
-      #   env:
-      #     COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-      # - name: Get PR title (Dev release)
-      #   uses: actions/github-script@v5.0.0
-      #   if: always() && contains('refs/heads/main', github.ref)
-      #   id: get-pr-title
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     result-encoding: string
-      #     script: |
-      #       const isMergedByCommit = ${{ steps.parse-pr-number.outputs.result }} !== 0
-      #       const prNumber = Number(${{ steps.parse-pr-number.outputs.result }})
-      #       const pullRequest = await github.rest.pulls.get({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         pull_number: prNumber,
-      #       })
-
-      #       return pullRequest.data.title
       - name: Release Slack Alert (Dev)
         uses: 8398a7/action-slack@v3
         if: always()
