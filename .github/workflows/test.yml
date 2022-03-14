@@ -84,11 +84,15 @@ jobs:
     steps:
       - name: Parse deployed tickets
         uses: actions/github-script@v5.0.0
+        id: parse-deployed-tickets
         with:
           result-encoding: string
           script: |
             const commits = process.env.COMMITS
-            console.log('commits', commits)
-            console.log('type', typeof commits)
+            const result = typeof commits
+            return result
         env:
           COMMITS: ${{ toJson(github.event.commits) }}
+      - name: Console.log
+        run: |
+          echo ${{ steps.parse-deployed-tickets.outputs.result }}
