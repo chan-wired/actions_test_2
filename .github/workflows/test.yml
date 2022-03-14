@@ -76,3 +76,19 @@ jobs:
           text: ${{ steps.set-alert-message.outputs.result }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+
+  jira:
+    name: Trigger Jira Webhook
+    runs-on: ubuntu-latest
+    if: github.event_name == 'devel' && github.ref == 'refs/heads/stage' && github.event.commits[0].author.email != 'bot@renovateapp.com'
+    steps:
+      - name: Parse deployed tickets
+        uses: actions/github-script@v5.0.0
+        with:
+          result-encoding: string
+          script: |
+            const commits = process.env.COMMITS
+            console.log('commits', commits)
+            console.log('type', typeof commits)
+        env:
+          COMMITS: ${{ github.event.commits }}
