@@ -105,7 +105,7 @@ jobs:
             })
 
             axios({
-              url: 'https://automation.atlassian.com/pro/hooks/bda29b370de7e6f07a2854f1eb3600362a40611a',
+              url: 'https://automation.atlassian.com/pro/hooks/035704a0bdbb60e062d14644a7ab3428323e0910',
               method: 'post',
               headers: {'Content-type': 'application/json'},
               data: {
