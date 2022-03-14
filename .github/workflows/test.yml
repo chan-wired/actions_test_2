@@ -97,7 +97,7 @@ jobs:
                 result.push(ticket)
               }
             })
-            return result
+            return JSON.stringify(result)
         env:
           GITHUB: ${{ toJson(github) }}
       - name: Parse deployed commits
@@ -109,7 +109,7 @@ jobs:
             const github2 = JSON.parse(process.env.GITHUB)
             const result = github2.event.commits
 
-            return result
+            return JSON.stringify(result)
         env:
           GITHUB: ${{ toJson(github) }}
       - name: Console.log(commits)
