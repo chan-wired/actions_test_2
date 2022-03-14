@@ -109,7 +109,7 @@ jobs:
               method: 'POST',
               headers: {
                 'Content-type': 'application/json',
-                'Content-Length': Buffer.byteLength(data)
+                'Content-Length': Buffer.byteLength(JSON.stringify(data))
               },
             }
 
