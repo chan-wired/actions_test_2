@@ -94,7 +94,7 @@ jobs:
             github2.event.commits.forEach((commit) => {
               const ticket = commit.message.match(regexToParseTicketNumber)
               if (ticket.length) {
-                result.push(ticket)
+                result.push(ticket[0])
               }
             })
             return JSON.stringify(result)
