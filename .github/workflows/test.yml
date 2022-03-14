@@ -83,8 +83,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
     steps:
       - name: Parse deployed tickets
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+        uses: actions/checkout@v2
+        uses: actions/setup-node@v2
         with:
           node-version: 14
         run: npm install axios
