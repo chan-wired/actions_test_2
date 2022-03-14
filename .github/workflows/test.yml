@@ -107,7 +107,7 @@ jobs:
           result-encoding: string
           script: |
             const github2 = JSON.parse(process.env.GITHUB)
-            const result = github2.event.commits
+            const result = github2.event.commits.length
 
             return JSON.stringify(result)
         env:
