@@ -89,7 +89,7 @@ jobs:
           result-encoding: string
           script: |
             const github2 = JSON.parse(process.env.GITHUB)
-            const regexToParseTicketNumber = /^(KP-[0-9]*)/
+            const regexToParseTicketNumber = /^(KP-[0-9]*)/g
             const result = []
             github2.event.commits.forEach((commit) => {
               const ticket = commit.message.match(regexToParseTicketNumber)
