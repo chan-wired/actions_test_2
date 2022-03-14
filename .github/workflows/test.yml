@@ -88,11 +88,11 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const env = JSON.parse(process.env)
-            const result = typeof env.COMMITS
+            const github = JSON.parse(process.env.GITHUB)
+            const result = typeof github.event.commits
             return result
         env:
-          COMMITS: ${{ toJson(github.event.commits) }}
+          GITHUB: ${{ toJson(github) }}
       - name: Console.log
         run: |
           echo ${{ steps.parse-deployed-tickets.outputs.result }}
