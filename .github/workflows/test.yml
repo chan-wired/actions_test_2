@@ -104,22 +104,6 @@ jobs:
               }
             })
 
-            # const data = {
-            #   issues: tickets,
-            #   data: {
-            #     releaseVersion: "0.1.0"
-            #   }
-            # }
-            # const options = {
-            #   method: 'POST',
-            #   headers: {
-            #     'Content-type': 'application/json',
-            #     'Content-Length': Buffer.byteLength(JSON.stringify(data))
-            #   },
-            # }
-
-            # http.request('http://automation.atlassian.com/pro/hooks/bda29b370de7e6f07a2854f1eb3600362a40611a', options)
-
             axios({
               url: 'https://automation.atlassian.com/pro/hooks/bda29b370de7e6f07a2854f1eb3600362a40611a',
               method: 'post',
