@@ -80,7 +80,7 @@ jobs:
   jira:
     name: Trigger Jira Webhook
     runs-on: ubuntu-latest
-    if: github.event_name == 'devel' && github.ref == 'refs/heads/stage' && github.event.commits[0].author.email != 'bot@renovateapp.com'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
     steps:
       - name: Parse deployed tickets
         uses: actions/github-script@v5.0.0
