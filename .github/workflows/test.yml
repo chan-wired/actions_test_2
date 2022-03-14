@@ -88,8 +88,8 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const commits = process.env.COMMITS
-            const result = typeof commits
+            const env = JSON.parse(process.env)
+            const result = typeof env.COMMITS
             return result
         env:
           COMMITS: ${{ toJson(github.event.commits) }}
