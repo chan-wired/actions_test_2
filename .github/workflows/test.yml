@@ -117,10 +117,5 @@ jobs:
               url: 'https://automation.atlassian.com/pro/hooks/bda29b370de7e6f07a2854f1eb3600362a40611a',
               options
             })
-
-            return JSON.stringify(result)
         env:
           GITHUB: ${{ toJson(github) }}
-      - name: Console.log(tickets)
-        run: |
-          echo ${{ steps.parse-deployed-tickets.outputs.result }}
