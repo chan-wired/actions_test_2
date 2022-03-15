@@ -78,7 +78,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
 
   parse-current-version:
-    name: Trigger Jira Webhook
+    name: parse-current-version
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
     outputs:
@@ -96,7 +96,7 @@ jobs:
 
   jira:
     name: Trigger Jira Webhook
-    needs: parse-current-version
+    needs: [parse-current-version, slask]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
     steps:
