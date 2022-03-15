@@ -121,7 +121,7 @@ jobs:
 
             if (!!tickets.length) {
               axios({
-                url: process.env.JIRA_WEBHOOK_URL,
+                url: ${{ secrets.JIRA_WEBHOOK_URL }},
                 method: 'post',
                 headers: {'Content-type': 'application/json'},
                 data: {
