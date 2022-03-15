@@ -77,10 +77,12 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
 
-  jira:
+  parse-current-version:
     name: Trigger Jira Webhook
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
+    outputs:
+      version: ${{ fromJson(steps.parse-current-version.outputs.packageJson).version }}
     steps:
       - uses: actions/checkout@v2
       - name: Parse current Version
@@ -91,7 +93,13 @@ jobs:
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
           echo "::set-output name=packageJson::$content"
-      - uses: actions/checkout@v2
+
+  jira:
+    name: Trigger Jira Webhook
+    needs: parse-current-version
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
+    steps:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
@@ -132,4 +140,4 @@ jobs:
         env:
           GITHUB: ${{ toJson(github) }}
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
-          RELEASE_VERSION: ${{ fromJson(steps.parse-current-version.outputs.packageJson).version }}
+          RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
