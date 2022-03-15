@@ -91,6 +91,7 @@ jobs:
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
           echo "::set-output name=packageJson::$content"
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 14
