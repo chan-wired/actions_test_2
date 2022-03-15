@@ -82,6 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
     steps:
+      - uses: actions/checkout@v2
       - name: Parse current Version
         id: parse-current-version
         run: |
