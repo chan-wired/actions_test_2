@@ -140,4 +140,4 @@ jobs:
         env:
           GITHUB: ${{ toJson(github) }}
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
-          RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
+          RELEASE_VERSION: ${{ jobs.parse-current-version.outputs.version }}
