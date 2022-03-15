@@ -82,7 +82,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 14
@@ -94,15 +93,18 @@ jobs:
           result-encoding: string
           script: |
             const axios = require('axios');
-            const github2 = JSON.parse(process.env.GITHUB)
+            const githubObj = JSON.parse(process.env.GITHUB)
             const regexToParseTicketNumber = /^(HC2-[0-9]*)/g
-            const tickets = []
-            github2.event.commits.forEach((commit) => {
+            let tickets = []
+
+            githubObj.event.commits.forEach((commit) => {
               const ticket = commit.message.match(regexToParseTicketNumber)
               if (ticket) {
                 tickets.push(ticket[0])
               }
             })
+
+            tickets = [...new Set(tickets)]
 
             if (!!tickets.length) {
               axios({
