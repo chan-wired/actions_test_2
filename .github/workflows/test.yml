@@ -104,16 +104,18 @@ jobs:
               }
             })
 
-            axios({
-              url: 'https://automation.atlassian.com/pro/hooks/035704a0bdbb60e062d14644a7ab3428323e0910',
-              method: 'post',
-              headers: {'Content-type': 'application/json'},
-              data: {
-                issues: tickets,
+            if (!!tickets.length) {
+              axios({
+                url: 'https://automation.atlassian.com/pro/hooks/035704a0bdbb60e062d14644a7ab3428323e0910',
+                method: 'post',
+                headers: {'Content-type': 'application/json'},
                 data: {
-                  releaseVersion: "0.1.0"
+                  issues: tickets,
+                  data: {
+                    releaseVersion: "0.1.0"
+                  }
                 }
-              }
-            })
+              })
+            }
         env:
           GITHUB: ${{ toJson(github) }}
