@@ -82,17 +82,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
     outputs:
-      version: ${{ fromJson(steps.parse-current-version.outputs.packageJson).version }}
+      version: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
     steps:
       - uses: actions/checkout@v2
       - name: Parse current Version
         id: parse-current-version
-        run: |
-          content=`cat ./package.json`
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          echo "::set-output name=packageJson::$content"
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./package.json
 
   jira:
     name: Trigger Jira Webhook
