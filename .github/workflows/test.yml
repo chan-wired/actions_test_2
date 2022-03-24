@@ -121,11 +121,14 @@ jobs:
             })
 
             tickets = [...new Set(tickets)]
+            const commitMessage = process.env.COMMIT_MESSAGE
+            const regexToParseNumber = /[0-9]+/
+            const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
 
             const response = await github.rest.pulls.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                pull_number: context.issue.number,
+                pull_number: prNumber,
             })
             console.log(response);
 
@@ -146,3 +149,4 @@ jobs:
           GITHUB: ${{ toJson(github) }}
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
