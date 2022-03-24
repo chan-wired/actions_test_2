@@ -130,7 +130,7 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: prNumber,
             })
-            console.log(JSON.parse(JSON.stringify(response)))
+            console.log(JSON.stringify(response))
 
             if (!!tickets.length) {
               axios({
