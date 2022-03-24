@@ -105,6 +105,7 @@ jobs:
         uses: actions/github-script@v5.0.0
         id: parse-deployed-tickets
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
             const axios = require('axios');
@@ -120,6 +121,13 @@ jobs:
             })
 
             tickets = [...new Set(tickets)]
+
+            const response = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+            })
+            console.log(response);
 
             if (!!tickets.length) {
               axios({
