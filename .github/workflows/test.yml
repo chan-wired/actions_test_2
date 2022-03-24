@@ -111,26 +111,25 @@ jobs:
             const axios = require('axios');
             const githubObj = JSON.parse(process.env.GITHUB)
             const regexToParseTicketNumber = /(HC2-[0-9]*)/
-            let tickets = []
-
-            githubObj.event.commits.forEach((commit) => {
-              const ticket = commit.message.match(regexToParseTicketNumber)
-              if (ticket) {
-                tickets.push(ticket[0])
-              }
-            })
-
-            tickets = [...new Set(tickets)]
             const commitMessage = process.env.COMMIT_MESSAGE
             const regexToParseNumber = /[0-9]+/
             const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
+            let tickets = []
 
             const response = await github.rest.pulls.listCommits({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: prNumber,
             })
-            console.log(JSON.stringify(response))
+
+            response.data.forEach((elem) => {
+              const ticket = elem.commit.message.match(regexToParseTicketNumber)
+              if (ticket) {
+                tickets.push(ticket[0])
+              }
+            })
+
+            tickets = [...new Set(tickets)]
 
             if (!!tickets.length) {
               axios({
