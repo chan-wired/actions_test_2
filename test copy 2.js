@@ -1,1 +1,1 @@
-console.log(' 123 4');
+console.log(' 1 2 3 4');
