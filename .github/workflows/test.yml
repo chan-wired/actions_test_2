@@ -122,7 +122,7 @@ jobs:
                 pull_number: prNumber,
             })
 
-            console.log(response)
+            console.dir(response)
 
             response.data.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
@@ -133,7 +133,7 @@ jobs:
 
             tickets = [...new Set(tickets)]
 
-            console.log(tickets)
+            console.dir(tickets)
 
             if (!!tickets.length) {
               axios({
@@ -155,8 +155,3 @@ jobs:
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-      - name: Print get response
-        env:
-          RESPONSE: ${{ toJson(steps.parse-deployed-tickets.outputs.result) }}
-        run: |
-          echo "$RESPONSE"
