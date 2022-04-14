@@ -122,7 +122,7 @@ jobs:
                 pull_number: prNumber,
             })
 
-            console.dir(response)
+            console.dir(JSON.stringify(response.data))
 
             response.data.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
