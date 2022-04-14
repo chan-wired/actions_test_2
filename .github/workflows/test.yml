@@ -139,6 +139,13 @@ jobs:
               }
             });
 
+            const octoResponse = await octokit.request("GET /repos/{owner}/{repo}/commits"{
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            console.dir(JSON.stringify(octoResponse));
+
             response.data.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
               if (ticket) {
