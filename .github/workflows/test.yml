@@ -100,7 +100,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm install axios @octokit/core
+      - run: npm install axios @octokit/rest
       - name: Parse deployed tickets
         uses: actions/github-script@v5.0.0
         id: parse-deployed-tickets
@@ -109,7 +109,7 @@ jobs:
           result-encoding: string
           script: |
             const axios = require('axios');
-            const { Octokit } = require("@octokit/core"); 
+            const { Octokit } = require("@octokit/rest");
             const githubObj = JSON.parse(process.env.GITHUB);
             const regexToParseTicketNumber = /(HC2-[0-9]*)/;
             const commitMessage = process.env.COMMIT_MESSAGE;
