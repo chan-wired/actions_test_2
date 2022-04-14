@@ -61,7 +61,7 @@ jobs:
                 pull_number: prNumber,
               })
 
-              return `Pull Requestㅤ#${prNumber} [ ${pullRequest.data.title} ] is released...`
+              return `Pull Request #${prNumber} [ ${pullRequest.data.title} ] is released...`
             } else {
               return `Last commit ${commitMessage} is released.`
             }
@@ -122,6 +122,8 @@ jobs:
                 pull_number: prNumber,
             })
 
+            console.log(response)
+
             response.data.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
               if (ticket) {
@@ -130,6 +132,8 @@ jobs:
             })
 
             tickets = [...new Set(tickets)]
+
+            console.log(tickets)
 
             if (!!tickets.length) {
               axios({
@@ -144,8 +148,15 @@ jobs:
                 }
               })
             }
+
+            return response
         env:
           GITHUB: ${{ toJson(github) }}
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+      - name: Print get response
+        env:
+          RESPONSE: ${{ steps.parse-deployed-tickets.outputs.result }}
+        run: |
+          echo "$RESPONSE"
