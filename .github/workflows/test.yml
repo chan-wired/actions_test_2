@@ -126,10 +126,6 @@ jobs:
             const octoResponse = await octokit.rest.repos.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: 'devel'
-              since: response.data[0].sha,
-              until: githubObj.event.head_commit.id,
-              per_page: 10,
             });
 
             console.dir(JSON.stringify(octoResponse));
