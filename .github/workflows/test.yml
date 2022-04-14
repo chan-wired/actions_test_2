@@ -157,6 +157,6 @@ jobs:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
       - name: Print get response
         env:
-          RESPONSE: ${{ steps.parse-deployed-tickets.outputs.result }}
+          RESPONSE: ${{ toJson(steps.parse-deployed-tickets.outputs.result) }}
         run: |
           echo "$RESPONSE"
