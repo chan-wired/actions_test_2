@@ -108,54 +108,62 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const axios = require('axios')
-            const octokit = require("@octokit/core")
-            const githubObj = JSON.parse(process.env.GITHUB)
-            const regexToParseTicketNumber = /(HC2-[0-9]*)/
-            const commitMessage = process.env.COMMIT_MESSAGE
-            const regexToParseNumber = /[0-9]+/
-            const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
-            let tickets = []
+            try {
+              const axios = require('axios')
+              const octokit = require("@octokit/core")
+              const githubObj = JSON.parse(process.env.GITHUB)
+              const regexToParseTicketNumber = /(HC2-[0-9]*)/
+              const commitMessage = process.env.COMMIT_MESSAGE
+              const regexToParseNumber = /[0-9]+/
+              const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
+              let tickets = []
 
-            const response = await github.rest.pulls.listCommits({
+              const response = await github.rest.pulls.listCommits({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: prNumber,
+              })
+
+              const octoResponse = await octokit.rest.repos.listCommits({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                pull_number: prNumber,
-            })
+                sha: 'devel'
+                since: response.data[0].sha,
+                until: githubObj.event.head_commit.id,
+                per_page: 10,
+              })
 
-            const octoResponse = await octokit.request('GET /repos/{owner}/{repo}/commits', {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
+              console.dir(JSON.stringify(octoResponse))
 
-            console.dir(JSON.stringify(octoResponse))
-
-            response.data.forEach((elem) => {
-              const ticket = elem.commit.message.match(regexToParseTicketNumber)
-              if (ticket) {
-                tickets.push(ticket[0])
-              }
-            })
-
-            tickets = [...new Set(tickets)]
-
-            console.dir(tickets)
-
-            if (!!tickets.length) {
-              axios({
-                url: process.env.JIRA_WEBHOOK_URL,
-                method: 'post',
-                headers: {'Content-type': 'application/json'},
-                data: {
-                  issues: tickets,
-                  data: {
-                    releaseVersion: process.env.RELEASE_VERSION
-                  }
+              response.data.forEach((elem) => {
+                const ticket = elem.commit.message.match(regexToParseTicketNumber)
+                if (ticket) {
+                  tickets.push(ticket[0])
                 }
               })
-            }
 
-            return response
+              tickets = [...new Set(tickets)]
+
+              console.dir(tickets)
+
+              if (!!tickets.length) {
+                axios({
+                  url: process.env.JIRA_WEBHOOK_URL,
+                  method: 'post',
+                  headers: {'Content-type': 'application/json'},
+                  data: {
+                    issues: tickets,
+                    data: {
+                      releaseVersion: process.env.RELEASE_VERSION
+                    }
+                  }
+                })
+              }
+
+              return response
+            } catch (e) {
+              console.error(e);
+            }
         env:
           GITHUB: ${{ toJson(github) }}
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
