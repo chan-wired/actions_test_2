@@ -1,6 +1,6 @@
 {
   "name": "actions_test",
-  "version": "8.8.8",
+  "version": "1.2.3",
   "description": "",
   "main": "test.js",
   "scripts": {
