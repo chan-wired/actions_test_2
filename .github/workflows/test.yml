@@ -123,9 +123,21 @@ jobs:
                 pull_number: prNumber,
             });
 
-            const octokit = new Octokit({ auth: process.env.PERSONAL_GITHUB_TOKEN });
-
-            console.dir(JSON.stringify(octoResponse));
+            const octokit = new Octokit({
+              auth: process.env.PERSONAL_GITHUB_TOKEN,
+              baseUrl: 'https://api.github.com',
+              log: {
+                debug: () => {},
+                info: () => {},
+                warn: console.warn,
+                error: console.error
+              },
+              request: {
+                agent: undefined,
+                fetch: undefined,
+                timeout: 0
+              }
+            });
 
             response.data.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
