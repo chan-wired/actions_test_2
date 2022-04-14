@@ -139,7 +139,7 @@ jobs:
               }
             });
 
-            const octoResponse = await octokit.request("GET /repos/{owner}/{repo}/commits"{
+            const octoResponse = await octokit.request("GET /repos/{owner}/{repo}/commits", {
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
