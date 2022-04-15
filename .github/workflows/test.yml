@@ -135,7 +135,7 @@ jobs:
               }
             }
             console.log(JSON.stringify(response))
-            response.data.forEach((elem) => {
+            response.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
               if (ticket) {
                 tickets.push(ticket[0]);
