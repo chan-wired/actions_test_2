@@ -141,33 +141,6 @@ jobs:
             console.log(response1)
             console.log(response2)
             console.log(response3)
-
-            # response.data.forEach((elem) => {
-            #   const ticket = elem.commit.message.match(regexToParseTicketNumber)
-            #   if (ticket) {
-            #     tickets.push(ticket[0]);
-            #   }
-            # });
-
-            tickets = [...new Set(tickets)];
-
-            console.dir(tickets);
-
-            if (!!tickets.length) {
-              axios({
-                url: process.env.JIRA_WEBHOOK_URL,
-                method: 'post',
-                headers: {'Content-type': 'application/json'},
-                data: {
-                  issues: tickets,
-                  data: {
-                    releaseVersion: process.env.RELEASE_VERSION
-                  }
-                }
-              });
-            }
-
-            # return response;
         env:
           GITHUB: ${{ toJson(github) }}
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
