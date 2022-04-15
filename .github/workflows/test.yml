@@ -130,7 +130,7 @@ jobs:
                 headers: {'Content-type': 'application/json'},
             })
 
-            console.dir(JSON.stringify(restResponse));
+            console.log(restResponse)
 
             response.data.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
