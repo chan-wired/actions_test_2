@@ -128,7 +128,7 @@ jobs:
               });
 
               if (!!data.length) {
-                response.push(data);
+                response.push(...data);
                 page++;
               } else {
                 break;
