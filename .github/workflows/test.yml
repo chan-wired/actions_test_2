@@ -167,7 +167,7 @@ jobs:
               });
             }
 
-            return response;
+            # return response;
         env:
           GITHUB: ${{ toJson(github) }}
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
