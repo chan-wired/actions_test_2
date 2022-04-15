@@ -100,7 +100,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm install axios @octokit/core
+      - run: npm install axios
       - name: Parse deployed tickets
         uses: actions/github-script@v5.0.0
         id: parse-deployed-tickets
@@ -116,28 +116,38 @@ jobs:
             const prNumber = Number(commitMessage.match(regexToParseNumber)[0]);
             let tickets = [];
 
-            const response = await github.rest.pulls.listCommits({
+            const response1 = await github.rest.pulls.listCommits({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: prNumber,
+                per_page: 1,
+                page: 1,
+            });
+            const response2 = await github.rest.pulls.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                per_page: 1,
+                page: 2,
+            });
+            const response3 = await github.rest.pulls.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                per_page: 1,
+                page: 3,
             });
 
-            const user = 'chan-wired'
-            const pw = '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'
-            const restResponse = await axios({
-              url: `https://${user}:${pw}@api.github.com/repos/${context.repo.owner}/${context.repo.repo}/commits?sha=devel&since=${response.data[0].sha}&until=${githubObj.event.head_commit.id}&per_page=10`,
-              method: 'get',
-                headers: {'Content-type': 'application/json'},
-            })
+            console.log(response1)
+            console.log(response2)
+            console.log(response3)
 
-            console.log(restResponse)
-
-            response.data.forEach((elem) => {
-              const ticket = elem.commit.message.match(regexToParseTicketNumber)
-              if (ticket) {
-                tickets.push(ticket[0]);
-              }
-            });
+            # response.data.forEach((elem) => {
+            #   const ticket = elem.commit.message.match(regexToParseTicketNumber)
+            #   if (ticket) {
+            #     tickets.push(ticket[0]);
+            #   }
+            # });
 
             tickets = [...new Set(tickets)];
 
