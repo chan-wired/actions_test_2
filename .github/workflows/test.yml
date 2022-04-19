@@ -100,6 +100,7 @@ jobs:
         uses: actions/github-script@v5.0.0
         id: parse-ticket-numbers
         with:
+          result-encoding: string
           script: |
             const regexToParseTicketNumber = /(HC2-[0-9]*)/;
             const commitMessage = process.env.COMMIT_MESSAGE;
@@ -163,10 +164,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const test = process.env.TEST
-            console.log('type: ', typeof process.env.TEST)
+            const test = ${{ needs.parse-ticket-numbers.outputs.result }}
+            console.log('type: ', typeof test)
             console.log('imported: ', test)
-            console.log('array from', Array.from(process.env.TEST))
+            console.log('array from', Array.from(test))
 
             const axios = require('axios');
             const regexToParseTicketNumber = /(HC2-[0-9]*)/;
@@ -224,4 +225,3 @@ jobs:
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          TEST: ${{ needs.parse-ticket-numbers.outputs.result }}
