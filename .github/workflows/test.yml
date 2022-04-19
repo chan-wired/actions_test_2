@@ -164,10 +164,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const test = ${{ needs.parse-ticket-numbers.outputs.result }}
-            console.log('type: ', typeof test)
-            console.log('imported: ', test)
-            console.log('array from', Array.from(test))
+            const plz = "${{ needs.parse-ticket-numbers.outputs.result }}"
+            console.log('type: ', typeof plz)
+            console.log('imported: ', plz)
+            console.log('array from', Array.from(plz))
 
             const axios = require('axios');
             const regexToParseTicketNumber = /(HC2-[0-9]*)/;
