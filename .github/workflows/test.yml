@@ -165,6 +165,7 @@ jobs:
           result-encoding: string
           script: |
             console.log('type: ', typeof process.env.TEST)
+            console.log('imported: ', process.env.TEST)
             console.log('array from', Array.from(process.env.TEST))
 
             const axios = require('axios');
