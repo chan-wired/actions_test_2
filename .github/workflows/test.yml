@@ -219,4 +219,4 @@ jobs:
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          TEST: ${{ fromJson(needs.parse-ticket-numbers.outputs.result) }}
+          TEST: ${{ needs.parse-ticket-numbers.outputs.result }}
