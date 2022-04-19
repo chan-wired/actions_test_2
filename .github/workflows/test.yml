@@ -164,7 +164,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            console.log(process.env.TEST)
+            console.log(typeof process.env.TEST)
             console.log(Array.from(process.env.TEST))
 
             const axios = require('axios');
