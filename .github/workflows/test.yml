@@ -100,6 +100,7 @@ jobs:
         uses: actions/github-script@v5.0.0
         id: parse-ticket-numbers
         with:
+          result-encoding: string
           script: |
             const regexToParseTicketNumber = /(KP-[0-9]*)/
             const commitMessage = process.env.COMMIT_MESSAGE
@@ -134,7 +135,7 @@ jobs:
             });
 
             tickets = [...new Set(tickets)]
-
+            console.log(tickets)
             return tickets
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
