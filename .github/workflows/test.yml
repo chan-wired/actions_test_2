@@ -127,6 +127,8 @@ jobs:
               }
             }
 
+            console.log(response)
+
             response.forEach((elem) => {
               const ticket = elem.commit.message.match(regexToParseTicketNumber)
               if (ticket) {
@@ -135,8 +137,10 @@ jobs:
             });
 
             tickets = [...new Set(tickets)]
+
             console.log(tickets)
-            return tickets
+
+            return JSON.stringify({ tickets: tickets })
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
@@ -158,7 +162,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            console.log(process.env.TEST)
+            console.log(JSON.parse(process.env.TEST))
 
             const axios = require('axios');
             const githubObj = JSON.parse(process.env.GITHUB);
@@ -216,4 +220,4 @@ jobs:
           JIRA_WEBHOOK_URL: ${{ secrets.JIRA_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.parse-current-version.outputs.version }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          TEST: ${{ needs.parse-ticket-numbers.outputs.result}}
+          TEST: ${{ toJson(needs.parse-ticket-numbers.outputs.result) }}
