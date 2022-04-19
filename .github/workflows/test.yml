@@ -138,7 +138,11 @@ jobs:
 
             console.log(tickets)
 
-            return tickets.join(',')
+            tickets = tickets.join(',')
+
+            console.log(tickets)
+
+            return tickets
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
