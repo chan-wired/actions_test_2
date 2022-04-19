@@ -142,7 +142,7 @@ jobs:
 
   jira:
     name: Trigger Jira Webhook
-    needs: [parse-current-version, slask]
+    needs: [parse-current-version, parse-ticket-numbers, slask]
     runs-on: ubuntu-latest
     if: always()
     steps:
