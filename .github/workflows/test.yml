@@ -100,7 +100,6 @@ jobs:
         uses: actions/github-script@v5.0.0
         id: parse-ticket-numbers
         with:
-          result-encoding: string
           script: |
             const regexToParseTicketNumber = /(HC2-[0-9]*)/;
             const commitMessage = process.env.COMMIT_MESSAGE;
@@ -164,8 +163,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
+            const test = process.env.TEST
             console.log('type: ', typeof process.env.TEST)
-            console.log('imported: ', process.env.TEST)
+            console.log('imported: ', test)
             console.log('array from', Array.from(process.env.TEST))
 
             const axios = require('axios');
