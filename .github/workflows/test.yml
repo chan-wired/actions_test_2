@@ -135,11 +135,11 @@ jobs:
 
             tickets = [...new Set(tickets)];
 
-            console.log(tickets)
+            console.log('before join: ', tickets)
 
             tickets = tickets.join(',')
 
-            console.log(tickets)
+            console.log('after join: ', tickets)
 
             return tickets
         env:
