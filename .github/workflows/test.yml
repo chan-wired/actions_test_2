@@ -100,7 +100,6 @@ jobs:
         uses: actions/github-script@v5.0.0
         id: parse-ticket-numbers
         with:
-          result-encoding: string
           script: |
             const regexToParseTicketNumber = /(HC2-[0-9]*)/;
             const commitMessage = process.env.COMMIT_MESSAGE;
