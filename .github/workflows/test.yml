@@ -150,7 +150,6 @@ jobs:
           node-version: 14
       - run: npm install axios
       - name: Trigger Jira Webhook (devel)
-        runs-on: ubuntu-latest
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel' && github.event.commits[0].author.email != 'bot@renovateapp.com'
         uses: actions/github-script@v5.0.0
         id: parse-deployed-tickets
