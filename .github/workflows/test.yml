@@ -95,7 +95,7 @@ jobs:
     name: parse-ticket-numbers
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && contains('refs/heads/stage refs/heads/devel', github.ref)
-    setps:
+    steps:
       - name: Parse Ticket numbers
         uses: actions/github-script@v5.0.0
         id: parse-ticket-numbers
