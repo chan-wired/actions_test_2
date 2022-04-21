@@ -99,7 +99,6 @@ jobs:
     steps:
       - name: Check PR method
         uses: actions/github-script@v5.0.0
-        if: always() && contains('refs/heads/main', github.ref) && github.event.commits[0].author.email != 'bot@renovateapp.com'
         id: check-merge-method
         with:
           result-encoding: string
