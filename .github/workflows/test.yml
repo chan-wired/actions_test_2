@@ -101,7 +101,7 @@ jobs:
         uses: 8BitJonny/gh-get-current-pr@2.1.1
 
       - name: Print Pr title
-        run: echo "PR title ${steps.parse-pr.outputs.pr_title}"
+        run: echo "PR title ${{steps.parse-pr.outputs.pr_title}}"
 
   jira:
     name: Trigger Jira Webhook
