@@ -1,8 +1,5 @@
 {
   "name": "actions_test",
-  "version": "9.9.9",
-  "description": "",
-  "main": "test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -66,21 +63,5 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "winston": "^3.3.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/chan-wired/actions_test.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/chan-wired/actions_test/issues"
-  },
-  "homepage": "https://github.com/chan-wired/actions_test#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog",
-      "disableSubjectLowerCase": true
-    }
   }
 }
