@@ -92,6 +92,8 @@ jobs:
           path: ./package.json
 
   parse-pr-title-when-push-event:
+    name: parse-pr-title-when-push-event
+    runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
       - name: parse-pr-title-when-push-event
