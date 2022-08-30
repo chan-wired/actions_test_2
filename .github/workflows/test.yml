@@ -22,60 +22,60 @@ jobs:
         run: |
           echo "$GITHUB_CONTEXT"
 
-  slask:
-    name: notify to slack for build result
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check PR method
-        uses: actions/github-script@v5.0.0
-        if: always() && contains('refs/heads/main', github.ref) && github.event.commits[0].author.email != 'bot@renovateapp.com'
-        id: check-merge-method
-        with:
-          result-encoding: string
-          script: |
-            const commitMessage = process.env.COMMIT_MESSAGE
-            const regexToCheckIsMergedByCommit = /Merge pull request/
-            const isMergedByCommit = !!commitMessage.match(regexToCheckIsMergedByCommit)
+  # slask:
+  #   name: notify to slack for build result
+  #   if: always()
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check PR method
+  #       uses: actions/github-script@v5.0.0
+  #       if: always() && contains('refs/heads/main', github.ref) && github.event.commits[0].author.email != 'bot@renovateapp.com'
+  #       id: check-merge-method
+  #       with:
+  #         result-encoding: string
+  #         script: |
+  #           const commitMessage = process.env.COMMIT_MESSAGE
+  #           const regexToCheckIsMergedByCommit = /Merge pull request/
+  #           const isMergedByCommit = !!commitMessage.match(regexToCheckIsMergedByCommit)
 
-            return isMergedByCommit ? "commit" : "rebase"
-        env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-      - name: Set alert message
-        uses: actions/github-script@v5.0.0
-        if: always() && contains('refs/heads/main', github.ref) && github.event.commits[0].author.email != 'bot@renovateapp.com'
-        id: set-alert-message
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          result-encoding: string
-          script: |
-            const prMethod = "${{ steps.check-merge-method.outputs.result }}"
-            const commitMessage = process.env.COMMIT_MESSAGE
+  #           return isMergedByCommit ? "commit" : "rebase"
+  #       env:
+  #         COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+  #     - name: Set alert message
+  #       uses: actions/github-script@v5.0.0
+  #       if: always() && contains('refs/heads/main', github.ref) && github.event.commits[0].author.email != 'bot@renovateapp.com'
+  #       id: set-alert-message
+  #       with:
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         result-encoding: string
+  #         script: |
+  #           const prMethod = "${{ steps.check-merge-method.outputs.result }}"
+  #           const commitMessage = process.env.COMMIT_MESSAGE
 
-            if (prMethod === "commit") {
-              const regexToParseNumber = /[0-9]+/
-              const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
-              const pullRequest = await github.rest.pulls.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: prNumber,
-              })
+  #           if (prMethod === "commit") {
+  #             const regexToParseNumber = /[0-9]+/
+  #             const prNumber = Number(commitMessage.match(regexToParseNumber)[0])
+  #             const pullRequest = await github.rest.pulls.get({
+  #               owner: context.repo.owner,
+  #               repo: context.repo.repo,
+  #               pull_number: prNumber,
+  #             })
 
-              return `Pull Request #${prNumber} [ ${pullRequest.data.title} ] is released...`
-            } else {
-              return `Last commit ${commitMessage} is released.`
-            }
-        env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-      - name: Release Slack Alert (Dev)
-        uses: 8398a7/action-slack@v3
-        if: always() && contains('refs/heads/main', github.ref) && github.event.commits[0].author.email != 'bot@renovateapp.com'
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
-          text: ${{ steps.set-alert-message.outputs.result }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+  #             return `Pull Request #${prNumber} [ ${pullRequest.data.title} ] is released...`
+  #           } else {
+  #             return `Last commit ${commitMessage} is released.`
+  #           }
+  #       env:
+  #         COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+  #     - name: Release Slack Alert (Dev)
+  #       uses: 8398a7/action-slack@v3
+  #       if: always() && contains('refs/heads/main', github.ref) && github.event.commits[0].author.email != 'bot@renovateapp.com'
+  #       with:
+  #         status: ${{ job.status }}
+  #         fields: repo,message,commit,author,action,ref,workflow # selectable (default: repo,message)
+  #         text: ${{ steps.set-alert-message.outputs.result }}
+  #       env:
+  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
 
   parse-current-version:
     name: parse-current-version
@@ -91,9 +91,19 @@ jobs:
         with:
           path: ./package.json
 
+  parse-pr-title-when-push-event:
+    if: github.event_name == 'push'
+    steps:
+      - name: parse-pr-title-when-push-event
+        id: parse-pr
+        uses: 8BitJonny/gh-get-current-pr@2.1.1
+
+      - name: Print Pr title
+        run: echo "PR title ${steps.parse-pr.outputs.pr_title}"
+
   jira:
     name: Trigger Jira Webhook
-    needs: [parse-current-version, slask]
+    needs: [parse-current-version]
     runs-on: ubuntu-latest
     if: always()
     steps:
