@@ -103,6 +103,19 @@ jobs:
       - name: Print Pr title
         run: echo "PR title ${{steps.parse-pr.outputs.pr_title}}"
 
+      # - name: Parse version which version up
+      #   id: parse-version
+      #   uses: actions/github-script@v5.0.0
+      #   with:
+      #     script: |
+      #       const prTitle = process.env.PR_TITLE
+      #       const regexToCheckWhichVersion = //
+      #   env:
+      #     PR_TITLE: ${{steps.parse-pr.outputs.pr_title}}
+
+    outputs:
+      version: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
+
   jira:
     name: Trigger Jira Webhook
     needs: [parse-current-version]
