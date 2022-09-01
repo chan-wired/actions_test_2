@@ -78,7 +78,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
         run: |
           echo "start"
-          chmod=+x ./scripts/versioning.sh
+          sudo chown -R ubuntu:ubuntu ubuntu
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm run release
