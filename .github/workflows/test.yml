@@ -80,14 +80,14 @@ jobs:
         run: echo "PR title ${{ steps.which-version.outputs.result }}"
 
       - name: version 업데이트 및 changelog 생성
-        if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
+        if: github.ref == 'refs/heads/devel' && steps.which-version.outputs.result != 'undefined'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm run release:${{ steps.which-version.outputs.result }}
 
       - name: 변경내역 푸시
-        if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
+        if: github.ref == 'refs/heads/devel' && steps.which-version.outputs.result != 'undefined'
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.PUSH_TO_PROTECTED }}
