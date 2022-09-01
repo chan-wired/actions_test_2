@@ -55,15 +55,18 @@ jobs:
           result-encoding: string
           script: |
             const prTitle = process.env.PR_TITLE
-            const whichVersion = prTitle.match(/\[Major\]/i)?.[0]
-                                || prTitle.match(/\[Minor\]/i)?.[0]
-                                || prTitle.match(/\[Patch\]/i)?.[0]
-                                || prTitle.match(/\[PreMinor\]/i)?.[0]
-                                || prTitle.match(/\[PrePatch\]/i)?.[0]
+            const parsedVersion = prTitle.match((\[PreMinor\])|(\[PrePatch\])|(\[Major\])|(\[Minor\])|(\[Patch\]))
+            if (!parsedVersion) {
+              return
+            }
+            const whichVersion = parsedVersion[0]
 
             return whichVersion
         env:
           PR_TITLE: ${{ steps.parse-pr.outputs.pr_title }}
+
+      - name: Print which version
+        run: echo "PR title ${{ steps.which-version.outputs.result }}"
 
       - name: set which version env
         run: echo ${{ steps.which-version.outputs.result }} > "./which_version.env"
