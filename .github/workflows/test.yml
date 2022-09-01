@@ -66,11 +66,11 @@ jobs:
           result-encoding: string
           script: |
             const prTitle = process.env.PR_TITLE
-            const parsedVersion = prTitle.match(/(PreMinor)|(PrePatch)|(Major)|(Minor)|(Patch)/)
-            if (!parsedVersion) {
+            const bumpVersion = prTitle.match(/(Major)|(Minor)|(Patch)|(PreMajor)|(PreMinor)|(PrePatch)|(PreRelease)/)
+            if (!bumpVersion) {
               return undefined
             }
-            const whichVersion = parsedVersion[0].toLocaleLowerCase();
+            const whichVersion = bumpVersion[0].toLocaleLowerCase();
 
             return whichVersion
         env:
