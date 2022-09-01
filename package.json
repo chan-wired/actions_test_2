@@ -1,10 +1,13 @@
 {
   "name": "actions_test",
+  "version": "1.6.1-stage.2",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "./scripts/versioning.sh"
   },
   "dependencies": {
     "cz-conventional-changelog": "^3.3.0",
+    "showdown": "^2.1.0",
     "standard-version": "^9.3.2"
   },
   "config": {
@@ -12,6 +15,5 @@
       "path": "./node_modules/cz-conventional-changelog",
       "disableSubjectLowerCase": true
     }
-  },
-  "version": "1.1.0"
+  }
 }
