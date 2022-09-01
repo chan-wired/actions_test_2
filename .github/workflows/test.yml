@@ -64,11 +64,11 @@ jobs:
           result-encoding: string
           script: |
             const prTitle = process.env.PR_TITLE
-            const parsedVersion = prTitle.match(/(\[PreMinor\])|(\[PrePatch\])|(\[Major\])|(\[Minor\])|(\[Patch\])/)
+            const parsedVersion = prTitle.match(/(PreMinor)|(PrePatch)|(Major)|(Minor)|(Patch)/)
             if (!parsedVersion) {
               return
             }
-            const whichVersion = parsedVersion[0]
+            const whichVersion = parsedVersion[0].toLocaleLowerCase();
 
             return whichVersion
         env:
@@ -77,17 +77,12 @@ jobs:
       - name: Print which version
         run: echo "PR title ${{ steps.which-version.outputs.result }}"
 
-      - name: set which version env
-        run: echo ${{ steps.which-version.outputs.result }} > "./which_version.env"
-
       - name: version 업데이트 및 changelog 생성
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
         run: |
-          echo "start"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          npm run release
-          echo "end"
+          npm run release:${{ steps.which-version.outputs.result }}
 
       - name: 변경내역 푸시
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
