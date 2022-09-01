@@ -1,6 +1,6 @@
 {
   "name": "actions_test",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:major": "./scripts/versioning.sh --major",

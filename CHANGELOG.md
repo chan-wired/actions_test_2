@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/chan-wired/actions_test_2/compare/v2.8.0...v2.8.1) (2022-09-01)
+
 ## 2.8.0 (2022-09-01)
 
 ### 2.7.2 (2022-09-01)
