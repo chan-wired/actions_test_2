@@ -1,14 +1,15 @@
 {
   "name": "actions_test",
-  "version": "8.0.0",
+  "version": "7.1.4",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release:major": "./scripts/versioning.sh --major",
-    "release:minor": "./scripts/versioning.sh --minor",
-    "release:patch": "./scripts/versioning.sh --patch",
-    "release:preminor": "./scripts/versioning.sh --pre-minor",
-    "release:prepatch": "npm version prepatch -m 'chore(release): v%s'",
-    "release:prerelease": "npm version prerelease -m 'chore(release): v%s'"
+    "release:major": "npx npmversion --increment major",
+    "release:minor": "npx npmversion --increment minor",
+    "release:patch": "npx npmversion --increment patch",
+    "release:premajor": "npx npmversion --preid stage --increment premajor",
+    "release:preminor": "npx npmversion --preid stage --increment preminor",
+    "release:prepatch": "npx npmversion --preid stage --increment prepatch",
+    "release:prerelease": "npx npmversion --preid stage --increment prerelease"
   },
   "dependencies": {
     "cz-conventional-changelog": "^3.3.0",
