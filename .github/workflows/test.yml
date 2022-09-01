@@ -44,6 +44,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
       - name: parse-pr-title-when-push-event
         id: parse-pr
         uses: 8BitJonny/gh-get-current-pr@2.1.1
@@ -78,7 +84,6 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
         run: |
           echo "start"
-          sudo chown -R ubuntu:ubuntu ubuntu
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm run release
