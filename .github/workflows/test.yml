@@ -55,11 +55,11 @@ jobs:
           result-encoding: string
           script: |
             const prTitle = process.env.PR_TITLE
-            const whichVersion = prTitle.match(/\[Major\]/i)[0]
-                                || prTitle.match(/\[Minor\]/i)[0]
-                                || prTitle.match(/\[Patch\]/i)[0]
-                                || prTitle.match(/\[PreMinor\]/i)[0]
-                                || prTitle.match(/\[PrePatch\]/i)[0]
+            const whichVersion = prTitle.match(/\[Major\]/i)?.[0]
+                                || prTitle.match(/\[Minor\]/i)?.[0]
+                                || prTitle.match(/\[Patch\]/i)?.[0]
+                                || prTitle.match(/\[PreMinor\]/i)?.[0]
+                                || prTitle.match(/\[PrePatch\]/i)?.[0]
 
             return whichVersion
         env:
