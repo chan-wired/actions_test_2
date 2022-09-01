@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, stage, devel ]
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    name: Github Release
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
