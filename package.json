@@ -7,7 +7,8 @@
     "release:minor": "./scripts/versioning.sh --minor",
     "release:patch": "./scripts/versioning.sh --patch",
     "release:preminor": "./scripts/versioning.sh --pre-minor",
-    "release:prepatch": "./scripts/versioning.sh --pre-patch"
+    "release:prepatch": "npm version prepatch -m 'chore(release): v%s'",
+    "release:prerelease": "npm version prerelease -m 'chore(release): v%s'"
   },
   "dependencies": {
     "cz-conventional-changelog": "^3.3.0",
