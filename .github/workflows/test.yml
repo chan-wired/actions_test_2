@@ -7,6 +7,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  release-please:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: google-github-actions/release-please-action@v3
+          with:
+            release-type: node
+            package-name: release-please-action
   build:
     if: github.event.head_commit.author.email != 'action@github.com'
     runs-on: ubuntu-latest
@@ -38,60 +45,60 @@ jobs:
     outputs:
       version: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
 
-  parse-pr-title-when-push-event:
-    name: parse-pr-title-when-push-event
-    runs-on: ubuntu-latest
-    if: github.event.head_commit.author.email != 'action@github.com'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # parse-pr-title-when-push-event:
+  #   name: parse-pr-title-when-push-event
+  #   runs-on: ubuntu-latest
+  #   if: github.event.head_commit.author.email != 'action@github.com'
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+  #     - name: Use Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #         cache: 'npm'
 
-      - name: parse-pr-title-when-push-event
-        id: parse-pr
-        uses: 8BitJonny/gh-get-current-pr@2.1.1
+  #     - name: parse-pr-title-when-push-event
+  #       id: parse-pr
+  #       uses: 8BitJonny/gh-get-current-pr@2.1.1
 
-      - name: Print Pr title
-        run: echo "PR title ${{steps.parse-pr.outputs.pr_title}}"
+  #     - name: Print Pr title
+  #       run: echo "PR title ${{steps.parse-pr.outputs.pr_title}}"
 
-      - name: Parse version which version up
-        id: which-version
-        uses: actions/github-script@v5.0.0
-        with:
-          result-encoding: string
-          script: |
-            const prTitle = process.env.PR_TITLE
-            const bumpVersion = prTitle.match(/(Major)|(Minor)|(Patch)|(PreMajor)|(PreMinor)|(PrePatch)|(PreRelease)/)
-            if (!bumpVersion) {
-              return undefined
-            }
-            const whichVersion = bumpVersion[0].toLocaleLowerCase();
+  #     - name: Parse version which version up
+  #       id: which-version
+  #       uses: actions/github-script@v5.0.0
+  #       with:
+  #         result-encoding: string
+  #         script: |
+  #           const prTitle = process.env.PR_TITLE
+  #           const bumpVersion = prTitle.match(/(Major)|(Minor)|(Patch)|(PreMajor)|(PreMinor)|(PrePatch)|(PreRelease)/)
+  #           if (!bumpVersion) {
+  #             return undefined
+  #           }
+  #           const whichVersion = bumpVersion[0].toLocaleLowerCase();
 
-            return whichVersion
-        env:
-          PR_TITLE: ${{ steps.parse-pr.outputs.pr_title }}
+  #           return whichVersion
+  #       env:
+  #         PR_TITLE: ${{ steps.parse-pr.outputs.pr_title }}
 
-      - name: Print which version
-        run: echo "PR title ${{ steps.which-version.outputs.result }}"
+  #     - name: Print which version
+  #       run: echo "PR title ${{ steps.which-version.outputs.result }}"
 
-      - name: version 업데이트 및 changelog 생성
-        if: steps.which-version.outputs.result != 'undefined'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          npm run release:${{ steps.which-version.outputs.result }}
+  #     - name: version 업데이트 및 changelog 생성
+  #       if: steps.which-version.outputs.result != 'undefined'
+  #       run: |
+  #         git config --local user.email "action@github.com"
+  #         git config --local user.name "GitHub Action"
+  #         npm run release:${{ steps.which-version.outputs.result }}
 
-      - name: 변경내역 푸시
-        if: steps.which-version.outputs.result != 'undefined'
-        uses: CasperWA/push-protected@v2
-        with:
-          token: ${{ secrets.PUSH_TO_PROTECTED }}
-          branch: devel
-          unprotect_reviews: true
-          tags: true
-          debug: true
+  #     - name: 변경내역 푸시
+  #       if: steps.which-version.outputs.result != 'undefined'
+  #       uses: CasperWA/push-protected@v2
+  #       with:
+  #         token: ${{ secrets.PUSH_TO_PROTECTED }}
+  #         branch: devel
+  #         unprotect_reviews: true
+  #         tags: true
+  #         debug: true
