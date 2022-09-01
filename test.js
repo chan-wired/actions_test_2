@@ -1,6 +1,6 @@
 const prTitle = "a";
 const regex =
-  /\[PreMinor\])|(\[PrePatch\])|(\[Major\])|(\[Minor\])|(\[Patch\])/;
+  /(\[PreMinor\])|(\[PrePatch\])|(\[Major\])|(\[Minor\])|(\[Patch\])/;
 const parsedVersion = prTitle.match(regex);
 if (!parsedVersion) {
   return;
