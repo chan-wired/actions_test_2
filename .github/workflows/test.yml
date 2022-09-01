@@ -78,7 +78,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
         run: |
           echo "start"
-          git update-index --chmod=+x ./scripts/versioning.sh
+          sudo chmod=+x ./scripts/versioning.sh
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm run release
