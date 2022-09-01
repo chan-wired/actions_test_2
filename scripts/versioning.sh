@@ -6,6 +6,7 @@ if [[ -f ${PACKAGE_JSON_FILE} ]]; then
   case "$1" in
     --major)
       npx standard-version --release-as major --skip.commit --skip.tag
+      npm version minor -m 'chore(release): v%s'
       ;;
     --minor)
       npx standard-version --release-as minor --skip.commit --skip.tag
