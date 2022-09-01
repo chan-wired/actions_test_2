@@ -77,16 +77,18 @@ jobs:
       - name: version 업데이트 및 changelog 생성
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
         run: |
+          echo "start"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm run release
+          echo "end"
 
       - name: 변경내역 푸시
         if: github.event_name == 'push' && github.ref == 'refs/heads/devel'
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.PUSH_TO_PROTECTED }}
-          branch: stage
+          branch: devel
           unprotect_reviews: true
           tags: true
           debug: true
