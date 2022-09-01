@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0-stage.4](https://github.com/chan-wired/actions_test/compare/v1.4.0-stage.3...v1.4.0-stage.4) (2022-09-01)
+
 ## [1.4.0-stage.3](https://github.com/chan-wired/actions_test/compare/v1.4.0-stage.2...v1.4.0-stage.3) (2022-09-01)
 
 ## [1.4.0-stage.2](https://github.com/chan-wired/actions_test/compare/v1.4.0-stage.1...v1.4.0-stage.2) (2022-09-01)
