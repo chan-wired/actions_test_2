@@ -1,30 +1,23 @@
 #!/bin/bash
 
 PACKAGE_JSON_FILE="./package.json"
-WHICH_VERSION_ENV_FILE="./which_version.env"
-if [[ -f ${PACKAGE_JSON_FILE} && -f ${WHICH_VERSION_ENV_FILE} ]]; then
-  VERSION_TYPE="$(cat ${WHICH_VERSION_ENV_FILE})"
+if [[ -f ${PACKAGE_JSON_FILE} ]]; then
 
-  case ${VERSION_TYPE} in
-    "[Major]")
+  case "$1" in
+    --major)
       npx standard-version --release-as major --skip.commit --skip.tag
-      #echo "test: npx standard-version --release-as major --skip.commit --skip.tag"
       ;;
-    "[Minor]")
+    --minor)
       npx standard-version --release-as minor --skip.commit --skip.tag
-      #echo "test: npx standard-version --release-as minor --skip.commit --skip.tag"
       ;;
-    "[Patch]")
+    --patch)
       npx standard-version --release-as patch --skip.commit --skip.tag
-      #echo "test: npx standard-version --release-as patch --skip.commit --skip.tag"
       ;;
-    "[PreMinor]")
+    --pre-minor)
       npx standard-version --release-as minor --prerelease stage --skip.commit --skip.tag
-      #echo "test: npx standard-version --release-as patch --skip.commit --skip.tag"
       ;;
-    "[PrePatch]")
+    --pre-patch)
       npx standard-version --release-as patch --prerelease stage --skip.commit --skip.tag
-      #echo "test: npx standard-version --release-as patch --skip.commit --skip.tag"
       ;;
     *)
       echo "version not changed"
@@ -38,9 +31,6 @@ if [[ -f ${PACKAGE_JSON_FILE} && -f ${WHICH_VERSION_ENV_FILE} ]]; then
   # get version
   VERSION=$(cat ${PACKAGE_JSON_FILE} | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])")
   echo "${VERSION}"
-
-  # which_version.env 파일 비우기
-  echo "" > ${WHICH_VERSION_ENV_FILE}
 
   # git commit and tag
   git add -u

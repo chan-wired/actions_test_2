@@ -3,7 +3,11 @@
   "version": "2.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "./scripts/versioning.sh"
+    "release:major": "./scripts/versioning.sh --major",
+    "release:minor": "./scripts/versioning.sh --minor",
+    "release:patch": "./scripts/versioning.sh --patch",
+    "release:preminor": "./scripts/versioning.sh --pre-minor",
+    "release:prepatch": "./scripts/versioning.sh --pre-patch"
   },
   "dependencies": {
     "cz-conventional-changelog": "^3.3.0",
