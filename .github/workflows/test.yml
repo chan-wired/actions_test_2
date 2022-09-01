@@ -68,7 +68,7 @@ jobs:
             const prTitle = process.env.PR_TITLE
             const parsedVersion = prTitle.match(/(PreMinor)|(PrePatch)|(Major)|(Minor)|(Patch)/)
             if (!parsedVersion) {
-              return
+              return undefined
             }
             const whichVersion = parsedVersion[0].toLocaleLowerCase();
 
@@ -80,14 +80,14 @@ jobs:
         run: echo "PR title ${{ steps.which-version.outputs.result }}"
 
       - name: version 업데이트 및 changelog 생성
-        if: github.ref == 'refs/heads/devel' && steps.which-version.outputs.result != 'undefined'
+        if: steps.which-version.outputs.result != 'undefined'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm run release:${{ steps.which-version.outputs.result }}
 
       - name: 변경내역 푸시
-        if: github.ref == 'refs/heads/devel' && steps.which-version.outputs.result != 'undefined'
+        if: steps.which-version.outputs.result != 'undefined'
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.PUSH_TO_PROTECTED }}
@@ -95,6 +95,3 @@ jobs:
           unprotect_reviews: true
           tags: true
           debug: true
-
-    outputs:
-      version: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
