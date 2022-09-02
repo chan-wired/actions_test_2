@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main, stage, devel ]
+
+jobs:
+  CI:
+    name: print github object
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Dump GitHub context
+        run: |
+          echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
