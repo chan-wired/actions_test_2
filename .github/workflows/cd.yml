@@ -22,12 +22,15 @@ jobs:
         uses: actions/github-script@v5.0.0
         with:
           script: |
+            const currentVersion = process.env.CURRENT_VERSION
             await github.rest.repose.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: String(${{ fromJson(steps.parse-current-version.outputs.content).version }}),
+              tag_name: currentVersion,
               generate_release_notes: true,
             })
+        env:
+          CURRENT_VERSION: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
 
       # - uses: google-github-actions/release-please-action@v3
       #   with:
