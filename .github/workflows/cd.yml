@@ -18,6 +18,15 @@ jobs:
         with:
           path: ./package.json
 
+      - name: steps.parse-current-version.outputs.content
+        run: echo "${{ steps.parse-current-version.outputs.content }}"
+
+      - name: fromJson(steps.parse-current-version.outputs.content)
+        run: echo "${{ fromJson(steps.parse-current-version.outputs.content) }}"
+
+      - name: fromJson(steps.parse-current-version.outputs.content).version
+        run: echo "${{ fromJson(steps.parse-current-version.outputs.content).version }}"
+
       - name: create release note
         uses: actions/github-script@v5.0.0
         with:
