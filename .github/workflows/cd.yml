@@ -18,28 +18,18 @@ jobs:
         with:
           path: ./package.json
 
-      - name: steps.parse-current-version.outputs.content
-        run: echo "${{ steps.parse-current-version.outputs.content }}"
-
-      - name: fromJson(steps.parse-current-version.outputs.content)
-        run: echo "${{ fromJson(steps.parse-current-version.outputs.content) }}"
-
-      - name: fromJson(steps.parse-current-version.outputs.content).version
-        run: echo "${{ fromJson(steps.parse-current-version.outputs.content).version }}"
-
       - name: create release note
         uses: actions/github-script@v5.0.0
         with:
           script: |
-            const currentVersion = process.env.CURRENT_VERSION
             await github.rest.repose.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: currentVersion,
+              tag_name: context.ref,
               generate_release_notes: true,
             })
-        env:
-          CURRENT_VERSION: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
+        # env:
+        #   CURRENT_VERSION: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
 
       # - uses: google-github-actions/release-please-action@v3
       #   with:
