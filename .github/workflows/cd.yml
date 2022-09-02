@@ -18,8 +18,19 @@ jobs:
         with:
           path: ./package.json
 
-      - uses: google-github-actions/release-please-action@v3
+      - name: create release note
+        uses: actions/github-script@v5.0.0
         with:
-          command: github-release
-          release-type: node
-          release-as: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
+          script: |
+            await github.rest.repose.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: ${{ fromJson(steps.parse-current-version.outputs.content).version }},
+              generate_release_notes: true,
+            })
+
+      # - uses: google-github-actions/release-please-action@v3
+      #   with:
+      #     command: github-release
+      #     release-type: node
+      #     release-as: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
