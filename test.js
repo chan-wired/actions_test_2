@@ -1,4 +1,4 @@
-const a = "aaa  aaa a a aㅁaa a da aa aaaad";
+const a = "aaa  aaa a a aㅁaa a da aa aaa ad";
 const prTitle = process.env.PR_TITLE;
 const parsedVersion = prTitle.match(
   /(PreMinor)|(PrePatch)|(Major)|(Minor)|(Patch)/
