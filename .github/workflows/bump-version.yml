@@ -3,6 +3,8 @@ name: Bump version
 on:
   push:
     branches: [ main, stage, devel ]
+    tags-ignore:
+      - "v*.*.*"
 
 jobs:
   bump-version0:

@@ -22,6 +22,7 @@ jobs:
         id: created-release
         uses: actions/github-script@v5.0.0
         with:
+          result-encoding: string
           script: |
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
@@ -34,7 +35,7 @@ jobs:
             return createdRelease.data.html_url
 
       - name: print created release
-        run: echo "created-release ${{steps.created-release.output.result}}"
+        run: echo "created-release ${{steps.created-release.outputs.result}}"
 
       - name: parse-pr-data
         id: parse-pr
