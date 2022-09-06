@@ -29,28 +29,12 @@ jobs:
               tag_name: context.ref,
               generate_release_notes: true,
             })
-            console.log(createdRelease)
+            console.log(createdRelease.data.html_url)
 
-            return createdRelease
+            return createdRelease.data.html_url
 
       - name: print created release
         run: echo "created-release ${{steps.created-release.output.result}}"
-
-      - name: get latest release note
-        id: latest-release
-        uses: actions/github-script@v5.0.0
-        with:
-          script: |
-            const latestRelease = await github.rest.repos.getLatestRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            console.log(latestRelease)
-
-            return latestRelease
-
-      - name: print created release
-        run: echo "latest-release ${{toJson(steps.latest-release.output.result)}}"
 
       - name: parse-pr-data
         id: parse-pr
