@@ -28,11 +28,10 @@ jobs:
               tag_name: context.ref,
               generate_release_notes: true,
             })
-        # env:
-        #   CURRENT_VERSION: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
 
-      # - uses: google-github-actions/release-please-action@v3
-      #   with:
-      #     command: github-release
-      #     release-type: node
-      #     release-as: ${{ fromJson(steps.parse-current-version.outputs.content).version }}
+      - name: parse-pr-data
+        id: parse-pr
+        uses: 8BitJonny/gh-get-current-pr@2.1.1
+
+      - name: Print Pr title
+        run: echo "PR title ${{steps.parse-pr.outputs.pr_title}}"
