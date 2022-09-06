@@ -19,15 +19,36 @@ jobs:
           path: ./package.json
 
       - name: create release note
+        id: created-release
         uses: actions/github-script@v5.0.0
         with:
           script: |
-            await github.rest.repos.createRelease({
+            const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: context.ref,
               generate_release_notes: true,
             })
+
+            return createdRelease
+
+      - name: print created release
+        run: echo "created-release ${{created-release}}"
+
+      - name: get latest release note
+        id: latest-release
+        uses: actions/github-script@v5.0.0
+        with:
+          script: |
+            const latestRelease = await github.rest.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+
+            return latestRelease
+
+      - name: print created release
+        run: echo "latest-release ${{latest-release}}"
 
       - name: parse-pr-data
         id: parse-pr
