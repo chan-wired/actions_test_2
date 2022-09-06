@@ -69,6 +69,15 @@ jobs:
           tags: true
           debug: true
 
+      - name: Parse current Version
+        id: parse-current-version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./package.json
+
+      - name: print version
+        run: echo "${{ fromJson(steps.parse-current-version.outputs.content).version }}"
+
   get-version:
     name: Get version
     runs-on: ubuntu-latest
