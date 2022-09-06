@@ -12,6 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Dump GitHub context
+        run: |
+          echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+
       - name: parse-pr-data
         id: parse-pr
         uses: 8BitJonny/gh-get-current-pr@2.1.1
@@ -51,7 +57,7 @@ jobs:
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.PUSH_TO_PROTECTED }}
-          branch: devel
+          branch: ${{ toJson(github).base_ref }}
           unprotect_reviews: true
           tags: true
           debug: true
