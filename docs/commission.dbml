@@ -1,0 +1,48 @@
+Project Commission {
+  database_type: 'MongoDB'
+  Note: '''
+    # Commission Database
+    ## dbdocs 테스트
+    - 마크다운 지원
+    - ci 통합 가능 (github actions)
+    - 무료
+
+
+    - 아직 베타버전
+    - nosql을 완벽하게 지원하는건 아님 -> 하지만 아직 그런 툴은 찾지 못함..
+  '''
+}
+Table Commission.Commission {
+  _id "string" [pk]
+  _userId "string" [note: "KemiUser.id"]
+  description "string" [note: "커미션 설명"]
+  imageUrls "string" [note: "포함된 이미지 url"]
+  minRequestAmount int [note: "최저가"]
+  maxWorkDay int [note: "최대작업일"]
+  maxNumberOfModification int [note: "최대수정가능회수"]
+  detailInfo "string" [note: "자세한 정보"]
+  questions "CommissionQuestion_Embed" [ref: - Commission.CommissionQuestion_Embed.embeded, note: "Embeded Collection"]
+  note: "커미션 원본 collection"
+}
+
+Table Commission.CommissionQuestion_Embed {
+  embeded "string"
+  _id "string" [pk]
+  type Enums.CoreECommissionFormType [note: "커미션 폼 구분"]
+  isRequired boolean [note: "필수여부"]
+  isMultipleSelect boolean [note: "다중선택 가능여부"]
+  questionTitle "string" [note: "질문명"]
+  questionDescription "string" [note: "질문에 대한 부가설명"]
+  selectableOptions "string []" [note: "선택형 폼 보기"]
+  test "string" [ref: - Test.test._id]
+  note: "커미션 폼 질문들"
+}
+
+Table Test.test {
+  _id "string" [pk]
+}
+
+enum Enums.CoreECommissionFormType {
+  SELECTABLE [note: "객관식"]
+  WRITABLE[note: "주관식"]
+}
