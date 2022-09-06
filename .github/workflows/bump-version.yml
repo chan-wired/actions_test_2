@@ -40,9 +40,14 @@ jobs:
             }
             const whichVersion = bumpVersion[0].toLocaleLowerCase();
 
+            const prNumber = process.env.PR_NUMBER
+            console.log(prNumber)
+            console.log(typeof Number(prNumber))
+
             return whichVersion
         env:
           PR_TITLE: ${{ steps.parse-pr.outputs.pr_title }}
+          PR_NUMBER: ${{ steps.parse-pr.outputs.number }}
 
       - name: Print which version
         run: echo "PR title ${{ steps.which-version.outputs.result }}"
@@ -63,3 +68,18 @@ jobs:
           unprotect_reviews: true
           tags: true
           debug: true
+
+  get-version:
+    name: Get version
+    runs-on: ubuntu-latest
+    need: [bump-version]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Parse current Version
+        id: parse-current-version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./package.json
+
+      - name: print version
+        run: echo "${{ fromJson(steps.parse-current-version.outputs.content).version }}"
