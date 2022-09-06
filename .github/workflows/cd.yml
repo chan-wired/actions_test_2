@@ -29,6 +29,7 @@ jobs:
               tag_name: context.ref,
               generate_release_notes: true,
             })
+            console.log(createdRelease)
 
             return createdRelease
 
@@ -44,11 +45,12 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
+            console.log(latestRelease)
 
             return latestRelease
 
       - name: print created release
-        run: echo "latest-release ${{steps.latest-release.output.result}}"
+        run: echo "latest-release ${{toJson(steps.latest-release.output.result)}}"
 
       - name: parse-pr-data
         id: parse-pr
