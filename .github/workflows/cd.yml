@@ -33,7 +33,7 @@ jobs:
             return createdRelease
 
       - name: print created release
-        run: echo "created-release ${{created-release}}"
+        run: echo "created-release ${{steps.created-release.output.result}}"
 
       - name: get latest release note
         id: latest-release
@@ -48,7 +48,7 @@ jobs:
             return latestRelease
 
       - name: print created release
-        run: echo "latest-release ${{latest-release}}"
+        run: echo "latest-release ${{steps.latest-release.output.result}}"
 
       - name: parse-pr-data
         id: parse-pr
