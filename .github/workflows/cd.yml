@@ -30,8 +30,9 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const isPreRelease = String(github.ref_name) === 'stage' ? true : false
+            const isPreRelease = github.event.base_ref === 'refs/heads/stage' ? true : false
             console.log('isPreRelease: ', isPreRelease);
+            console.log(context)
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
