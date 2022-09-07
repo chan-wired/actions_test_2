@@ -12,6 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Dump GitHub context
+        run: |
+          echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+
       - name: Parse current Version
         id: parse-current-version
         uses: juliangruber/read-file-action@v1
@@ -24,7 +30,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const isPreRelease = github.ref_name === 'stage' ? true : false
+            const isPreRelease = String(github.ref_name) === 'stage' ? true : false
             console.log('isPreRelease: ', isPreRelease);
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
