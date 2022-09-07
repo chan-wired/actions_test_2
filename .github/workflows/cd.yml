@@ -24,7 +24,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const isPreRelease = process.env.BRANCH_NAME === 'stage' ? true : false
+            const isPreRelease = github.ref_name === 'stage' ? true : false
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -34,8 +34,6 @@ jobs:
             })
 
             return createdRelease.data.html_url
-          env:
-            BRANCH_NAME: github.ref_name
 
       - name: print created release
         run: echo "created-release ${{steps.created-release.outputs.result}}"

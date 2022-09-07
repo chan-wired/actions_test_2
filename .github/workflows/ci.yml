@@ -16,3 +16,13 @@ jobs:
           echo "$GITHUB_CONTEXT"
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
+
+      - name: create release note
+        id: created-release
+        uses: actions/github-script@v5.0.0
+        with:
+          result-encoding: string
+          script: |
+            const isPreRelease = github.ref_name === 'devel' ? true : false
+
+            console.log(isPreRelease)
