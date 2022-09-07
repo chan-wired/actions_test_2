@@ -1,6 +1,6 @@
 {
   "name": "actions_test",
-  "version": "12.0.0",
+  "version": "12.1.0-stage.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:major": "npx npmversion --increment major",
