@@ -46,7 +46,7 @@ jobs:
           result-encoding: string
           script: |
             cosnt parseStagePrefixRegex = /stage/
-            const refName = "${{github.event.ref_name}}"
+            const refName = "${{github.ref_name}}"
             const isPreRelease = refName.match(parseStagePrefixRegex)
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
@@ -65,7 +65,7 @@ jobs:
           result-encoding: string
           script: |
             cosnt parseStagePrefixRegex = /stage/
-            const refName = "${{github.event.ref_name}}"
+            const refName = "${{github.ref_name}}"
             const isStageBranch = refName.match(parseStagePrefixRegex)
 
             return !!isStageBranch ? 'stage' : 'prod'
