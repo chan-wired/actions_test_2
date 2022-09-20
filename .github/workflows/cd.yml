@@ -46,7 +46,7 @@ jobs:
           result-encoding: string
           script: |
             cosnt parseStagePrefixRegex = /stage/
-            const refName = "${{github.ref_name}}"
+            const refName = process.env.REF_NAME
             const isPreRelease = refName.match(parseStagePrefixRegex)
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
@@ -57,6 +57,8 @@ jobs:
             })
 
             return createdRelease.data.html_url
+        env:
+          REF_NAME: ${{github.ref_name}}
 
       - name: Parse branch
         id: parse-branch
@@ -65,10 +67,12 @@ jobs:
           result-encoding: string
           script: |
             cosnt parseStagePrefixRegex = /stage/
-            const refName = "${{github.ref_name}}"
+            const refName = process.env.REF_NAME
             const isStageBranch = refName.match(parseStagePrefixRegex)
 
             return !!isStageBranch ? 'stage' : 'prod'
+        env:
+          REF_NAME: ${{github.ref_name}}
 
       - name: ChangeLog Slack Alert (Stage)
         if: ${{ steps.parse-branch.outputs.result }} == 'stage'
