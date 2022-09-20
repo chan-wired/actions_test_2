@@ -45,18 +45,44 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const isPreRelease = "${{github.event.base_ref}}" === 'refs/heads/stage' ? true : false
-            console.log('isPreRelease: ', isPreRelease);
-            console.log(context)
+            cosnt parseStagePrefixRegex = /stage/
+            const refName = "${{github.event.ref_name}}"
+            const isPreRelease = refName.match(parseStagePrefixRegex)
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: context.ref,
-              prerelease: isPreRelease,
+              prerelease: !!isPreRelease,
               generate_release_notes: true,
             })
 
             return createdRelease.data.html_url
+
+      - name: Parse branch
+        id: parse-branch
+        uses: actions/github-script@v5.0.0
+        with:
+          result-encoding: string
+          script: |
+            cosnt parseStagePrefixRegex = /stage/
+            const refName = "${{github.event.ref_name}}"
+            const isStageBranch = refName.match(parseStagePrefixRegex)
+
+            return !!isStageBranch ? 'stage' : 'prod'
+
+      - name: ChangeLog Slack Alert (Stage)
+        if: ${{ steps.parse-branch.outputs.result }} == 'stage'
+        uses: actions/github-script@v5.0.0
+        with:
+          script: |
+            console.log('stage branch')
+
+      - name: ChangeLog Slack Alert (prod)
+        if: ${{ steps.parse-branch.outputs.result }} == 'prod'
+        uses: actions/github-script@v5.0.0
+        with:
+          script: |
+            console.log('main branch')
 
       - name: print created release
         run: echo "created-release ${{steps.created-release.outputs.result}}"
