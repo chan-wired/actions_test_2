@@ -47,13 +47,7 @@ jobs:
           script: |
             const refName = process.env.REF_NAME
             const isPreReleaseExist = refName.match(/stage/)
-            let isPreRelease
-
-            if (isPreReleaseExist) {
-              isPreRelease = true
-            } else {
-              isPreRelease = false
-            }
+            const isPreRelease = isPreReleaseExist ? true : false
 
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
@@ -75,12 +69,9 @@ jobs:
           script: |
             const refName = process.env.REF_NAME
             const isStageBranch = refName.match(/stage/)
+            const result = isStageBranch ? 'stage' : 'prod'
 
-            if (isStageBranch) {
-              return 'stage'
-            } else {
-              return 'prod'
-            }
+            return result
         env:
           REF_NAME: ${{github.ref_name}}
 
