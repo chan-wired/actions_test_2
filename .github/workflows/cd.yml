@@ -45,14 +45,21 @@ jobs:
         with:
           result-encoding: string
           script: |
-            cosnt parseStagePrefixRegex = /stage/
             const refName = process.env.REF_NAME
-            const isPreRelease = refName.match(parseStagePrefixRegex)
+            const isPreReleaseExist = refName.match(/stage/)
+            let isPreRelease
+
+            if (isPreReleaseExist) {
+              isPreRelease = true
+            } else {
+              isPreRelease = false
+            }
+
             const createdRelease = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: context.ref,
-              prerelease: !!isPreRelease,
+              prerelease: isPreRelease,
               generate_release_notes: true,
             })
 
@@ -66,11 +73,14 @@ jobs:
         with:
           result-encoding: string
           script: |
-            cosnt parseStagePrefixRegex = /stage/
             const refName = process.env.REF_NAME
-            const isStageBranch = refName.match(parseStagePrefixRegex)
+            const isStageBranch = refName.match(/stage/)
 
-            return !!isStageBranch ? 'stage' : 'prod'
+            if (isStageBranch) {
+              return 'stage'
+            } else {
+              return 'prod'
+            }
         env:
           REF_NAME: ${{github.ref_name}}
 
