@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: [ main, stage, devel ]
 
+
 jobs:
   print-github-object:
     name: Print github object
