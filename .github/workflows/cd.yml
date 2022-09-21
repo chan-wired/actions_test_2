@@ -5,6 +5,7 @@ on:
     tags:
       - "v*.*.*"
 
+
 jobs:
   print-github-object:
     name: Print github object
